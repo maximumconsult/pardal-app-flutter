@@ -1,0 +1,205 @@
+{
+  "app_title": "Pardal",
+  "app_slogan": "Control your farm, protect your profit",
+  
+  "auth": {
+    "email": "Email",
+    "password": "Password",
+    "email_hint": "Enter your email",
+    "password_hint": "Enter your password",
+    "email_error": "Please enter a valid email",
+    "password_error": "Please enter your password",
+    "login_button": "Login",
+    "login_error": "Login failed. Please check your credentials.",
+    "loading": "Loading..."
+  },
+
+  "navigation": {
+    "dashboard": "Dashboard",
+    "batches": "Batches",
+    "costs": "Costs",
+    "incidents": "Incidents",
+    "mortalities": "Mortalities",
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+
+  "dashboard": {
+    "title": "Dashboard",
+    "active_batches": "Active Batches",
+    "total_animals": "Total Animals",
+    "mortality_rate": "Mortality Rate",
+    "active_costs": "Active Costs",
+    "global_profit": "Global Profit",
+    "quick_actions": "Quick Actions"
+  },
+
+  "batches": {
+    "title": "Batches",
+    "subtitle": "Manage your production cycles",
+    "add_batch": "Add Batch",
+    "batch_name": "Batch Name",
+    "species": "Species",
+    "quantity": "Quantity",
+    "start_date": "Start Date",
+    "expected_end": "Expected End",
+    "status": "Status",
+    "actions": "Actions",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view_details": "View Details",
+    "add_mortality": "Add Mortality",
+    "add_cost": "Add Cost",
+    "active": "Active",
+    "completed": "Completed",
+    "pending": "Pending",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "in_progress": "In Progress",
+    "resolved": "Resolved"
+  },
+
+  "costs": {
+    "title": "Costs",
+    "subtitle": "Record and validate production costs",
+    "add_cost": "Add Cost",
+    "batch": "Batch",
+    "category": "Category",
+    "description": "Description",
+    "amount": "Amount",
+    "date": "Date",
+    "worker": "Worker",
+    "status": "Status",
+    "total_value": "Total Value",
+    "cost_details": "Cost details...",
+    "record_cost": "Record Cost",
+    "approve": "Approve",
+    "reject": "Reject",
+    "pending_approval": "Pending Approval",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "success_message": "Cost recorded successfully!",
+    "approve_success": "Cost approved successfully.",
+    "reject_success": "Cost rejected successfully."
+  },
+
+  "incidents": {
+    "title": "Incidents",
+    "subtitle": "Report and manage incidents",
+    "add_incident": "Add Incident",
+    "incident_type": "Incident Type",
+    "description": "Description",
+    "incident_description": "Describe the incident...",
+    "urgency": "Urgency",
+    "reported_by": "Reported by",
+    "date": "Date",
+    "status": "Status",
+    "urgent": "Urgent",
+    "important": "Important",
+    "normal": "Normal",
+    "pending": "Pending",
+    "resolved": "Resolved",
+    "success_message": "Incident reported successfully.",
+    "resolve_success": "Incident resolved successfully."
+  },
+
+  "mortalities": {
+    "title": "Mortalities",
+    "subtitle": "Record animal losses",
+    "add_mortality": "Add Mortality",
+    "batch": "Batch",
+    "quantity": "Quantity",
+    "deaths": "Deaths",
+    "cause": "Cause",
+    "date": "Date",
+    "notes": "Notes",
+    "confirm_delete": "Are you sure you want to delete this record? The quantity will be restored to the batch.",
+    "delete_success": "Mortality record deleted successfully.",
+    "ok": "OK",
+    "cancel": "Cancel"
+  },
+
+  "profile": {
+    "title": "Profile",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "role": "Role",
+    "member_since": "Member Since",
+    "edit_profile": "Edit Profile",
+    "change_password": "Change Password",
+    "logout": "Logout"
+  },
+
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "portuguese": "Português",
+    "english": "English",
+    "notifications": "Notifications",
+    "enable_notifications": "Enable Notifications",
+    "about": "About",
+    "version": "Version",
+    "help": "Help",
+    "terms": "Terms of Service",
+    "privacy": "Privacy Policy"
+  },
+
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information",
+    "ok": "OK",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "close": "Close",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "required_field": "This field is required",
+    "invalid_input": "Invalid input",
+    "no_data": "No data available",
+    "try_again": "Try Again",
+    "connection_error": "Connection error. Please check your internet connection."
+  },
+
+  "production_types": {
+    "meat": "Meat",
+    "egg": "Eggs",
+    "fish": "Fish",
+    "dairy": "Dairy"
+  },
+
+  "species": {
+    "chicken": "Chicken",
+    "egg_layer": "Egg Layer",
+    "duck": "Duck",
+    "quail": "Quail",
+    "fish": "Fish",
+    "pig": "Pig",
+    "goat": "Goat",
+    "cow": "Cow",
+    "rabbit": "Rabbit",
+    "sheep": "Sheep",
+    "turkey": "Turkey",
+    "horse": "Horse",
+    "bee": "Bee"
+  },
+
+  "cost_categories": {
+    "grain": "Feed",
+    "syringe": "Vaccines",
+    "pill": "Medications",
+    "bolt": "Electricity",
+    "droplet": "Water",
+    "wrench": "Maintenance",
+    "truck": "Transport",
+    "users": "Labor"
+  }
+}

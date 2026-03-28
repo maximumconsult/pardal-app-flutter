@@ -1,0 +1,205 @@
+{
+  "app_title": "Pardal",
+  "app_slogan": "Controle a sua criação, proteja o seu lucro",
+  
+  "auth": {
+    "email": "Email",
+    "password": "Senha",
+    "email_hint": "Introduza o seu email",
+    "password_hint": "Introduza a sua senha",
+    "email_error": "Por favor introduza um email válido",
+    "password_error": "Por favor introduza a sua senha",
+    "login_button": "Entrar",
+    "login_error": "Falha no login. Por favor verifique as suas credenciais.",
+    "loading": "Carregando..."
+  },
+
+  "navigation": {
+    "dashboard": "Dashboard",
+    "batches": "Lotes",
+    "costs": "Custos",
+    "incidents": "Incidentes",
+    "mortalities": "Mortalidades",
+    "profile": "Perfil",
+    "settings": "Configurações",
+    "logout": "Sair"
+  },
+
+  "dashboard": {
+    "title": "Dashboard",
+    "active_batches": "Lotes Activos",
+    "total_animals": "Total de Animais",
+    "mortality_rate": "Taxa de Mortalidade",
+    "active_costs": "Custos Activos",
+    "global_profit": "Lucro Global",
+    "quick_actions": "Acções Rápidas"
+  },
+
+  "batches": {
+    "title": "Lotes",
+    "subtitle": "Gerir os seus ciclos de produção",
+    "add_batch": "Adicionar Lote",
+    "batch_name": "Nome do Lote",
+    "species": "Espécie",
+    "quantity": "Quantidade",
+    "start_date": "Data de Início",
+    "expected_end": "Fim Esperado",
+    "status": "Status",
+    "actions": "Acções",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "view_details": "Ver Detalhes",
+    "add_mortality": "Adicionar Mortalidade",
+    "add_cost": "Adicionar Custo",
+    "active": "Activo",
+    "completed": "Concluído",
+    "pending": "Pendente",
+    "approved": "Aprovado",
+    "rejected": "Rejeitado",
+    "in_progress": "Em Progresso",
+    "resolved": "Resolvida"
+  },
+
+  "costs": {
+    "title": "Custos",
+    "subtitle": "Lançar e validar custos de produção",
+    "add_cost": "Adicionar Custo",
+    "batch": "Lote",
+    "category": "Categoria",
+    "description": "Descrição",
+    "amount": "Valor",
+    "date": "Data",
+    "worker": "Colaborador",
+    "status": "Status",
+    "total_value": "Valor Total",
+    "cost_details": "Detalhes do custo...",
+    "record_cost": "Lançar Custo",
+    "approve": "Aprovar",
+    "reject": "Rejeitar",
+    "pending_approval": "Pendente de Aprovação",
+    "approved": "Aprovado",
+    "rejected": "Rejeitado",
+    "success_message": "Custo lançado com sucesso!",
+    "approve_success": "Custo aprovado com sucesso.",
+    "reject_success": "Custo rejeitado com sucesso."
+  },
+
+  "incidents": {
+    "title": "Incidentes",
+    "subtitle": "Reportar e gerir incidentes",
+    "add_incident": "Adicionar Incidente",
+    "incident_type": "Tipo de Incidente",
+    "description": "Descrição",
+    "incident_description": "Descreva o incidente...",
+    "urgency": "Urgência",
+    "reported_by": "Reportado por",
+    "date": "Data",
+    "status": "Status",
+    "urgent": "Urgente",
+    "important": "Importante",
+    "normal": "Normal",
+    "pending": "Pendente",
+    "resolved": "Resolvida",
+    "success_message": "Ocorrência reportada com sucesso.",
+    "resolve_success": "Ocorrência resolvida com sucesso."
+  },
+
+  "mortalities": {
+    "title": "Mortalidades",
+    "subtitle": "Registar perdas de animais",
+    "add_mortality": "Adicionar Mortalidade",
+    "batch": "Lote",
+    "quantity": "Quantidade",
+    "deaths": "Mortes",
+    "cause": "Causa",
+    "date": "Data",
+    "notes": "Notas",
+    "confirm_delete": "Tem a certeza que deseja eliminar este registo? A quantidade será restaurada ao lote.",
+    "delete_success": "Registo de mortalidade eliminado com sucesso.",
+    "ok": "OK",
+    "cancel": "Cancelar"
+  },
+
+  "profile": {
+    "title": "Perfil",
+    "name": "Nome",
+    "email": "Email",
+    "phone": "Telefone",
+    "role": "Função",
+    "member_since": "Membro desde",
+    "edit_profile": "Editar Perfil",
+    "change_password": "Alterar Senha",
+    "logout": "Sair"
+  },
+
+  "settings": {
+    "title": "Configurações",
+    "language": "Idioma",
+    "portuguese": "Português",
+    "english": "English",
+    "notifications": "Notificações",
+    "enable_notifications": "Activar Notificações",
+    "about": "Sobre",
+    "version": "Versão",
+    "help": "Ajuda",
+    "terms": "Termos de Serviço",
+    "privacy": "Política de Privacidade"
+  },
+
+  "common": {
+    "loading": "Carregando...",
+    "error": "Erro",
+    "success": "Sucesso",
+    "warning": "Aviso",
+    "info": "Informação",
+    "ok": "OK",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "back": "Voltar",
+    "close": "Fechar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "submit": "Enviar",
+    "required_field": "Este campo é obrigatório",
+    "invalid_input": "Entrada inválida",
+    "no_data": "Sem dados disponíveis",
+    "try_again": "Tentar Novamente",
+    "connection_error": "Erro de conexão. Por favor verifique a sua ligação à internet."
+  },
+
+  "production_types": {
+    "meat": "Carne",
+    "egg": "Ovos",
+    "fish": "Peixe",
+    "dairy": "Lacticínios"
+  },
+
+  "species": {
+    "chicken": "Frango de Corte",
+    "egg_layer": "Galinha Poedeira",
+    "duck": "Pato",
+    "quail": "Codorniz",
+    "fish": "Peixe",
+    "pig": "Porco",
+    "goat": "Caprino",
+    "cow": "Vaca",
+    "rabbit": "Coelho",
+    "sheep": "Ovelha",
+    "turkey": "Peru",
+    "horse": "Cavalo",
+    "bee": "Abelha"
+  },
+
+  "cost_categories": {
+    "grain": "Ração",
+    "syringe": "Vacinas",
+    "pill": "Medicamentos",
+    "bolt": "Electricidade",
+    "droplet": "Água",
+    "wrench": "Manutenção",
+    "truck": "Transporte",
+    "users": "Mão de Obra"
+  }
+}
