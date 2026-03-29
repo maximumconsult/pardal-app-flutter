@@ -59,14 +59,14 @@ class LocalizationProvider extends ChangeNotifier {
 // Extension para facilitar o uso
 extension LocalizationExtension on BuildContext {
   String tr(String key) {
-    return context.read<LocalizationProvider>().translate(key);
+    return read<LocalizationProvider>().translate(key);
   }
 
   String trWithParams(String key, Map<String, String> params) {
-    return context.read<LocalizationProvider>().translateWithParams(key, params);
+    return read<LocalizationProvider>().translateWithParams(key, params);
   }
 
   LocalizationProvider get localization {
-    return context.read<LocalizationProvider>();
+    return read<LocalizationProvider>();
   }
 }
