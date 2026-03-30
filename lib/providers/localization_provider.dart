@@ -36,4 +36,15 @@ class LocalizationProvider extends ChangeNotifier {
   List<String> getSupportedLanguages() {
     return ['pt', 'en'];
   }
+
+  String getLanguageName(String languageCode) {
+    switch (languageCode) {
+      case 'pt':
+        return 'Português';
+      case 'en':
+        return 'English';
+      default:
+        return languageCode;
+    }
+  }
 }
