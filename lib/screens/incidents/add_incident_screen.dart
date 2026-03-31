@@ -246,8 +246,6 @@ class _AddIncidentScreenState extends State<AddIncidentScreen> {
             ),
           );
         },
-      );
-        },
       ),
     );
   }
