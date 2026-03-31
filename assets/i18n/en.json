@@ -183,7 +183,8 @@
     "animals": "Animals",
     "hello": "Hello",
     "remaining": "Remaining",
-    "costs": "Costs"
+    "costs": "Costs",
+    "day": "Day"
   },
 
   "production_types": {
