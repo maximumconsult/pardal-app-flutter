@@ -51,43 +51,7 @@ class DataProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     } catch (e) {
-      // Se falhar, usar dados de exemplo para teste
-      _batches = [
-        {
-          'id': 1,
-          'name': 'Lote 001',
-          'species': 'Frango de Corte',
-          'icon': 'chicken',
-          'status': 'active',
-          'initial_quantity': 1000,
-          'current_quantity': 950,
-          'progress': 45,
-          'days_elapsed': 15,
-        },
-        {
-          'id': 2,
-          'name': 'Lote 002',
-          'species': 'Galinha Poedeira',
-          'icon': 'egg_layer',
-          'status': 'active',
-          'initial_quantity': 500,
-          'current_quantity': 480,
-          'progress': 60,
-          'days_elapsed': 20,
-        },
-        {
-          'id': 3,
-          'name': 'Lote 001 - Concluido',
-          'species': 'Pato',
-          'icon': 'duck',
-          'status': 'completed',
-          'initial_quantity': 800,
-          'current_quantity': 0,
-          'progress': 100,
-          'days_elapsed': 60,
-        },
-      ];
-      _error = null;
+      _error = e.toString();
       _isLoading = false;
       notifyListeners();
     }
@@ -192,29 +156,7 @@ class DataProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
     } catch (e) {
-      _incidents = [
-        {
-          'id': 1,
-          'type': 'disease',
-          'description': 'Suspeita de doenca respiratoria',
-          'urgency': 'urgent',
-          'reported_by': 'Joao Silva',
-          'reported_by_id': 1,
-          'date': '2026-03-30',
-          'status': 'pending',
-        },
-        {
-          'id': 2,
-          'type': 'equipment',
-          'description': 'Bebedouro danificado',
-          'urgency': 'important',
-          'reported_by': 'Maria Santos',
-          'reported_by_id': 2,
-          'date': '2026-03-29',
-          'status': 'resolved',
-        },
-      ];
-      _error = null;
+      _error = e.toString();
       _isLoading = false;
       notifyListeners();
     }
