@@ -32,7 +32,10 @@
     "mortality_rate": "Taxa de Mortalidade",
     "active_costs": "Custos Activos",
     "global_profit": "Lucro Global",
-    "quick_actions": "Acções Rápidas"
+    "quick_actions": "Acções Rápidas",
+    "pending_costs": "Custos Pendentes",
+    "financial_summary": "Resumo Financeiro",
+    "total_revenue": "Receita Total"
   },
 
   "batches": {
@@ -57,7 +60,10 @@
     "approved": "Aprovado",
     "rejected": "Rejeitado",
     "in_progress": "Em Progresso",
-    "resolved": "Resolvida"
+    "resolved": "Resolvida",
+    "select_species": "Selecione a espécie",
+    "error_loading": "Erro ao carregar lotes",
+    "no_batches": "Nenhum lote disponível"
   },
 
   "costs": {
@@ -101,7 +107,10 @@
     "pending": "Pendente",
     "resolved": "Resolvida",
     "success_message": "Ocorrência reportada com sucesso.",
-    "resolve_success": "Ocorrência resolvida com sucesso."
+    "resolve_success": "Ocorrência resolvida com sucesso.",
+    "select_type": "Selecione o tipo de incidente",
+    "select_urgency": "Selecione o nível de urgência",
+    "worker_name": "Nome do Colaborador"
   },
 
   "mortalities": {
@@ -122,6 +131,7 @@
 
   "profile": {
     "title": "Perfil",
+    "profile": "Perfil",
     "name": "Nome",
     "email": "Email",
     "phone": "Telefone",
@@ -129,7 +139,9 @@
     "member_since": "Membro desde",
     "edit_profile": "Editar Perfil",
     "change_password": "Alterar Senha",
-    "logout": "Sair"
+    "logout": "Sair",
+    "security": "Segurança",
+    "logout_confirm": "Tem a certeza que deseja sair?"
   },
 
   "settings": {
@@ -166,7 +178,12 @@
     "invalid_input": "Entrada inválida",
     "no_data": "Sem dados disponíveis",
     "try_again": "Tentar Novamente",
-    "connection_error": "Erro de conexão. Por favor verifique a sua ligação à internet."
+    "connection_error": "Erro de conexão. Por favor verifique a sua ligação à internet.",
+    "mortality": "Mortalidade",
+    "animals": "Animais",
+    "hello": "Olá",
+    "remaining": "Restante",
+    "costs": "Custos"
   },
 
   "production_types": {

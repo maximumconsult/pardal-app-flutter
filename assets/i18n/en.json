@@ -32,7 +32,10 @@
     "mortality_rate": "Mortality Rate",
     "active_costs": "Active Costs",
     "global_profit": "Global Profit",
-    "quick_actions": "Quick Actions"
+    "quick_actions": "Quick Actions",
+    "pending_costs": "Pending Costs",
+    "financial_summary": "Financial Summary",
+    "total_revenue": "Total Revenue"
   },
 
   "batches": {
@@ -57,7 +60,10 @@
     "approved": "Approved",
     "rejected": "Rejected",
     "in_progress": "In Progress",
-    "resolved": "Resolved"
+    "resolved": "Resolved",
+    "select_species": "Select species",
+    "error_loading": "Error loading batches",
+    "no_batches": "No batches available"
   },
 
   "costs": {
@@ -101,7 +107,10 @@
     "pending": "Pending",
     "resolved": "Resolved",
     "success_message": "Incident reported successfully.",
-    "resolve_success": "Incident resolved successfully."
+    "resolve_success": "Incident resolved successfully.",
+    "select_type": "Select incident type",
+    "select_urgency": "Select urgency level",
+    "worker_name": "Worker Name"
   },
 
   "mortalities": {
@@ -122,6 +131,7 @@
 
   "profile": {
     "title": "Profile",
+    "profile": "Profile",
     "name": "Name",
     "email": "Email",
     "phone": "Phone",
@@ -129,7 +139,9 @@
     "member_since": "Member Since",
     "edit_profile": "Edit Profile",
     "change_password": "Change Password",
-    "logout": "Logout"
+    "logout": "Logout",
+    "security": "Security",
+    "logout_confirm": "Are you sure you want to logout?"
   },
 
   "settings": {
@@ -166,7 +178,12 @@
     "invalid_input": "Invalid input",
     "no_data": "No data available",
     "try_again": "Try Again",
-    "connection_error": "Connection error. Please check your internet connection."
+    "connection_error": "Connection error. Please check your internet connection.",
+    "mortality": "Mortality",
+    "animals": "Animals",
+    "hello": "Hello",
+    "remaining": "Remaining",
+    "costs": "Costs"
   },
 
   "production_types": {
