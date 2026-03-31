@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/data_provider.dart';
+import '../../providers/localization_provider.dart';
 import '../../utils/constants.dart';
 
 class AddIncidentScreen extends StatefulWidget {
@@ -18,11 +19,18 @@ class _AddIncidentScreenState extends State<AddIncidentScreen> {
   String? _type;
   String _urgency = 'normal';
 
-  final _urgencies = [
-    {'value': 'normal', 'label': 'Normal', 'color': AppConstants.accentColor},
-    {'value': 'important', 'label': 'Importante', 'color': AppConstants.warningColor},
-    {'value': 'urgent', 'label': 'Urgente', 'color': AppConstants.errorColor},
-  ];
+  late List<Map<String, dynamic>> _urgencies;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final localization = context.read<LocalizationProvider>();
+    _urgencies = [
+      {'value': 'normal', 'label': localization.translate('incidents.normal'), 'color': AppConstants.accentColor},
+      {'value': 'important', 'label': localization.translate('incidents.important'), 'color': AppConstants.warningColor},
+      {'value': 'urgent', 'label': localization.translate('incidents.urgent'), 'color': AppConstants.errorColor},
+    ];
+  }
 
   @override
   void initState() {
@@ -42,8 +50,9 @@ class _AddIncidentScreenState extends State<AddIncidentScreen> {
   Future<void> _submit() async {
     if (!_formKey.currentState!.validate()) return;
     if (_type == null) {
+      final localization = context.read<LocalizationProvider>();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Seleccione o tipo de ocorrência'), backgroundColor: AppConstants.errorColor),
+        SnackBar(content: Text(localization.translate('incidents.select_type')), backgroundColor: AppConstants.errorColor),
       );
       return;
     }
@@ -58,8 +67,9 @@ class _AddIncidentScreenState extends State<AddIncidentScreen> {
 
     final success = await data.storeIncident(body);
     if (success && mounted) {
+      final localization = context.read<LocalizationProvider>();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ocorrência reportada com sucesso!'), backgroundColor: AppConstants.successColor),
+        SnackBar(content: Text(localization.translate('incidents.success_message')), backgroundColor: AppConstants.successColor),
       );
       Navigator.of(context).pop(true);
     } else if (mounted && data.error != null) {
@@ -77,22 +87,25 @@ class _AddIncidentScreenState extends State<AddIncidentScreen> {
         backgroundColor: AppConstants.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
-        title: const Text('Nova Ocorrência'),
+        title: Consumer<LocalizationProvider>(
+          builder: (_, localization, __) => Text(localization.translate('incidents.add_incident')),
+        ),
       ),
       body: Consumer<DataProvider>(
         builder: (_, data, __) {
           final activeBatches = data.batches.where((b) => b['status'] == 'active').toList();
           final incidentTypes = data.incidentTypes;
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Urgência
-                  const Text('Urgência', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+          return Consumer<LocalizationProvider>(
+            builder: (_, localization, __) => SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Urgência
+                    Text(localization.translate('incidents.urgency'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 8),
                   Row(
                     children: _urgencies.map((u) {
@@ -126,22 +139,22 @@ class _AddIncidentScreenState extends State<AddIncidentScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Tipo (dinâmico da API)
-                  const Text('Tipo de Ocorrência *', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                  const SizedBox(height: 6),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey.shade300),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: _type,
-                        isExpanded: true,
-                        hint: const Text('Seleccione o tipo'),
+                    // Tipo (dinâmico da API)
+                    Text('${localization.translate('incidents.incident_type')} *', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                    const SizedBox(height: 6),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          value: _type,
+                          isExpanded: true,
+                          hint: Text(localization.translate('incidents.select_type')),
                         items: incidentTypes.map<DropdownMenuItem<String>>((t) {
                           return DropdownMenuItem<String>(
                             value: t['slug'] as String,
@@ -154,24 +167,24 @@ class _AddIncidentScreenState extends State<AddIncidentScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Lote associado
-                  const Text('Lote Associado (opcional)', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                  const SizedBox(height: 6),
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.grey.shade300),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<int?>(
-                        value: _batchId,
-                        isExpanded: true,
-                        hint: const Text('Nenhum lote'),
-                        items: [
-                          const DropdownMenuItem<int?>(value: null, child: Text('Nenhum lote')),
+                    // Lote associado
+                    Text('${localization.translate('batches.batch')} (${localization.translate('common.optional')})', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                    const SizedBox(height: 6),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(color: Colors.grey.shade300),
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<int?>(
+                          value: _batchId,
+                          isExpanded: true,
+                          hint: Text(localization.translate('common.none')),
+                          items: [
+                            DropdownMenuItem<int?>(value: null, child: Text(localization.translate('common.none'))),
                           ...activeBatches.map((b) {
                             final species = b['species'] as Map<String, dynamic>?;
                             final emoji = species != null ? AppConstants.speciesEmoji(species['icon'] ?? '') : '🐾';
@@ -187,50 +200,53 @@ class _AddIncidentScreenState extends State<AddIncidentScreen> {
                   ),
                   const SizedBox(height: 20),
 
-                  // Título
-                  const Text('Título *', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    controller: _titleCtrl,
-                    decoration: _inputDecoration('Descreva brevemente a ocorrência'),
-                    validator: (v) {
-                      if (v == null || v.isEmpty) return 'Título é obrigatório';
-                      return null;
-                    },
-                  ),
+                    // Título
+                    Text('${localization.translate('incidents.description')} *', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                    const SizedBox(height: 6),
+                    TextFormField(
+                      controller: _titleCtrl,
+                      decoration: _inputDecoration(localization.translate('incidents.incident_description')),
+                      validator: (v) {
+                        if (v == null || v.isEmpty) return localization.translate('common.required_field');
+                        return null;
+                      },
+                    ),
                   const SizedBox(height: 20),
 
-                  // Descrição
-                  const Text('Descrição', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    controller: _descCtrl,
-                    maxLines: 4,
-                    decoration: _inputDecoration('Detalhes adicionais sobre a ocorrência...'),
-                  ),
+                    // Descrição adicional
+                    Text(localization.translate('incidents.description'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                    const SizedBox(height: 6),
+                    TextFormField(
+                      controller: _descCtrl,
+                      maxLines: 4,
+                      decoration: _inputDecoration('${localization.translate('common.additional')} ${localization.translate('incidents.description')}...'),
+                    ),
                   const SizedBox(height: 28),
 
-                  // Botão
-                  SizedBox(
-                    width: double.infinity,
-                    height: 52,
-                    child: ElevatedButton(
-                      onPressed: data.isLoading ? null : _submit,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppConstants.primaryColor,
-                        foregroundColor: Colors.white,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        elevation: 0,
+                    // Botão
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: ElevatedButton(
+                        onPressed: data.isLoading ? null : _submit,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: AppConstants.primaryColor,
+                          foregroundColor: Colors.white,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          elevation: 0,
+                        ),
+                        child: data.isLoading
+                            ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                            : Text(localization.translate('incidents.add_incident'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                       ),
-                      child: data.isLoading
-                          ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                          : const Text('Reportar Ocorrência', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           );
+        },
+      );
         },
       ),
     );

@@ -1,7 +1,6 @@
 {
   "app_title": "Pardal",
   "app_slogan": "Controle a sua criação, proteja o seu lucro",
-  
   "auth": {
     "email": "Email",
     "password": "Senha",
@@ -13,7 +12,6 @@
     "login_error": "Falha no login. Por favor verifique as suas credenciais.",
     "loading": "Carregando..."
   },
-
   "navigation": {
     "dashboard": "Dashboard",
     "batches": "Lotes",
@@ -24,7 +22,6 @@
     "settings": "Configurações",
     "logout": "Sair"
   },
-
   "dashboard": {
     "title": "Dashboard",
     "active_batches": "Lotes Activos",
@@ -37,7 +34,6 @@
     "financial_summary": "Resumo Financeiro",
     "total_revenue": "Receita Total"
   },
-
   "batches": {
     "title": "Lotes",
     "subtitle": "Gerir os seus ciclos de produção",
@@ -63,9 +59,9 @@
     "resolved": "Resolvida",
     "select_species": "Selecione a espécie",
     "error_loading": "Erro ao carregar lotes",
-    "no_batches": "Nenhum lote disponível"
+    "no_batches": "Nenhum lote disponível",
+    "batch": "Lote"
   },
-
   "costs": {
     "title": "Custos",
     "subtitle": "Lançar e validar custos de produção",
@@ -89,7 +85,6 @@
     "approve_success": "Custo aprovado com sucesso.",
     "reject_success": "Custo rejeitado com sucesso."
   },
-
   "incidents": {
     "title": "Incidentes",
     "subtitle": "Reportar e gerir incidentes",
@@ -112,7 +107,6 @@
     "select_urgency": "Selecione o nível de urgência",
     "worker_name": "Nome do Colaborador"
   },
-
   "mortalities": {
     "title": "Mortalidades",
     "subtitle": "Registar perdas de animais",
@@ -128,7 +122,6 @@
     "ok": "OK",
     "cancel": "Cancelar"
   },
-
   "profile": {
     "title": "Perfil",
     "profile": "Perfil",
@@ -143,7 +136,6 @@
     "security": "Segurança",
     "logout_confirm": "Tem a certeza que deseja sair?"
   },
-
   "settings": {
     "title": "Configurações",
     "language": "Idioma",
@@ -157,7 +149,6 @@
     "terms": "Termos de Serviço",
     "privacy": "Política de Privacidade"
   },
-
   "common": {
     "loading": "Carregando...",
     "error": "Erro",
@@ -184,16 +175,17 @@
     "hello": "Olá",
     "remaining": "Restante",
     "costs": "Custos",
-    "day": "Dia"
+    "day": "Dia",
+    "optional": "opcional",
+    "none": "Nenhum",
+    "additional": "Detalhes adicionais sobre"
   },
-
   "production_types": {
     "meat": "Carne",
     "egg": "Ovos",
     "fish": "Peixe",
     "dairy": "Lacticínios"
   },
-
   "species": {
     "chicken": "Frango de Corte",
     "egg_layer": "Galinha Poedeira",
@@ -209,7 +201,6 @@
     "horse": "Cavalo",
     "bee": "Abelha"
   },
-
   "cost_categories": {
     "grain": "Ração",
     "syringe": "Vacinas",

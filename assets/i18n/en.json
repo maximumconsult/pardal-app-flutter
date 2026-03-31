@@ -1,7 +1,6 @@
 {
   "app_title": "Pardal",
   "app_slogan": "Control your farm, protect your profit",
-  
   "auth": {
     "email": "Email",
     "password": "Password",
@@ -13,7 +12,6 @@
     "login_error": "Login failed. Please check your credentials.",
     "loading": "Loading..."
   },
-
   "navigation": {
     "dashboard": "Dashboard",
     "batches": "Batches",
@@ -24,7 +22,6 @@
     "settings": "Settings",
     "logout": "Logout"
   },
-
   "dashboard": {
     "title": "Dashboard",
     "active_batches": "Active Batches",
@@ -37,7 +34,6 @@
     "financial_summary": "Financial Summary",
     "total_revenue": "Total Revenue"
   },
-
   "batches": {
     "title": "Batches",
     "subtitle": "Manage your production cycles",
@@ -63,9 +59,9 @@
     "resolved": "Resolved",
     "select_species": "Select species",
     "error_loading": "Error loading batches",
-    "no_batches": "No batches available"
+    "no_batches": "No batches available",
+    "batch": "Batch"
   },
-
   "costs": {
     "title": "Costs",
     "subtitle": "Record and validate production costs",
@@ -89,7 +85,6 @@
     "approve_success": "Cost approved successfully.",
     "reject_success": "Cost rejected successfully."
   },
-
   "incidents": {
     "title": "Incidents",
     "subtitle": "Report and manage incidents",
@@ -112,7 +107,6 @@
     "select_urgency": "Select urgency level",
     "worker_name": "Worker Name"
   },
-
   "mortalities": {
     "title": "Mortalities",
     "subtitle": "Record animal losses",
@@ -128,7 +122,6 @@
     "ok": "OK",
     "cancel": "Cancel"
   },
-
   "profile": {
     "title": "Profile",
     "profile": "Profile",
@@ -143,7 +136,6 @@
     "security": "Security",
     "logout_confirm": "Are you sure you want to logout?"
   },
-
   "settings": {
     "title": "Settings",
     "language": "Language",
@@ -157,7 +149,6 @@
     "terms": "Terms of Service",
     "privacy": "Privacy Policy"
   },
-
   "common": {
     "loading": "Loading...",
     "error": "Error",
@@ -184,16 +175,17 @@
     "hello": "Hello",
     "remaining": "Remaining",
     "costs": "Costs",
-    "day": "Day"
+    "day": "Day",
+    "optional": "optional",
+    "none": "None",
+    "additional": "Additional details about"
   },
-
   "production_types": {
     "meat": "Meat",
     "egg": "Eggs",
     "fish": "Fish",
     "dairy": "Dairy"
   },
-
   "species": {
     "chicken": "Chicken",
     "egg_layer": "Egg Layer",
@@ -209,7 +201,6 @@
     "horse": "Horse",
     "bee": "Bee"
   },
-
   "cost_categories": {
     "grain": "Feed",
     "syringe": "Vaccines",
