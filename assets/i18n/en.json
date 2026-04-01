@@ -178,7 +178,8 @@
     "day": "Day",
     "optional": "optional",
     "none": "None",
-    "additional": "Additional details about"
+    "additional": "Additional details about",
+    "cost": "Cost"
   },
   "production_types": {
     "meat": "Meat",

@@ -178,7 +178,8 @@
     "day": "Dia",
     "optional": "opcional",
     "none": "Nenhum",
-    "additional": "Detalhes adicionais sobre"
+    "additional": "Detalhes adicionais sobre",
+    "cost": "Custo"
   },
   "production_types": {
     "meat": "Carne",
