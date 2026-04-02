@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import '../../providers/data_provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../utils/constants.dart';
-import '../../widgets/pardal_app_bar.dart';
+import '../../providers/localization_provider.dart';
 
 class WorkersScreen extends StatefulWidget {
   const WorkersScreen({super.key});
@@ -348,7 +348,14 @@ class _WorkersScreenState extends State<WorkersScreen> {
 
     return Scaffold(
       backgroundColor: AppConstants.backgroundColor,
-      appBar: PardalAppBar.build(title: 'Equipa'),
+      appBar: AppBar(
+        backgroundColor: AppConstants.primaryColor,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        title: Consumer<LocalizationProvider>(
+          builder: (_, localization, __) => Text(localization.translate('workers.title')),
+        ),
+      ),
       body: Consumer<DataProvider>(
         builder: (_, data, __) {
           if (data.isLoading && data.workers.isEmpty) {

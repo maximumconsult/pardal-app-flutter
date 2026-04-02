@@ -12,6 +12,8 @@ class DataProvider extends ChangeNotifier {
   List<dynamic> _species = [];
   List<dynamic> _incidentTypes = [];
   List<dynamic> _workers = [];
+  List<dynamic> _mortalities = [];
+  Map<String, dynamic>? _mortalitySummary;
   bool _isLoading = false;
   String? _error;
 
@@ -23,6 +25,8 @@ class DataProvider extends ChangeNotifier {
   List<dynamic> get species => _species;
   List<dynamic> get incidentTypes => _incidentTypes;
   List<dynamic> get workers => _workers;
+  List<dynamic> get mortalities => _mortalities;
+  Map<String, dynamic>? get mortalitySummary => _mortalitySummary;
   bool get isLoading => _isLoading;
   String? get error => _error;
 
@@ -189,6 +193,42 @@ class DataProvider extends ChangeNotifier {
     try {
       final response = await _api.get('/workers');
       _workers = response['workers'] as List<dynamic>? ?? [];
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _error = e.toString();
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  Future<bool> addWorker(Map<String, dynamic> data) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+    try {
+      await _api.post('/workers', data);
+      await loadWorkers();
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
+  // Mortalities
+  Future<void> loadMortalities() async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+    try {
+      final response = await _api.get('/mortalities');
+      _mortalities = response['mortalities'] as List<dynamic>? ?? [];
+      _mortalitySummary = response['summary'] as Map<String, dynamic>?;
       _isLoading = false;
       notifyListeners();
     } catch (e) {
