@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/data_provider.dart';
 import '../../utils/constants.dart';
-import '../../widgets/pardal_app_bar.dart';
+import '../../providers/localization_provider.dart';
 
 class MortalitiesScreen extends StatefulWidget {
   const MortalitiesScreen({super.key});
@@ -61,8 +61,13 @@ class _MortalitiesScreenState extends State<MortalitiesScreen> {
 
     return Scaffold(
       backgroundColor: AppConstants.backgroundColor,
-      appBar: PardalAppBar.build(
-        title: 'Mortalidades',
+      appBar: AppBar(
+        backgroundColor: AppConstants.primaryColor,
+        foregroundColor: Colors.white,
+        elevation: 0,
+        title: Consumer<LocalizationProvider>(
+          builder: (_, localization, __) => Text(localization.translate('common.mortality')),
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),

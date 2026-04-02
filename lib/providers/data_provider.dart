@@ -238,6 +238,23 @@ class DataProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> deleteMortality(int mortalityId) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+    try {
+      await _api.delete('/mortalities/$mortalityId');
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
   void clearError() {
     _error = null;
     notifyListeners();
