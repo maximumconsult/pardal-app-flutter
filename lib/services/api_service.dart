@@ -85,6 +85,23 @@ class ApiService {
     }
   }
 
+  Future<Map<String, dynamic>> delete(String endpoint) async {
+    try {
+      final response = await http.delete(
+        Uri.parse('${AppConstants.apiBaseUrl}$endpoint'),
+        headers: await _headers(),
+      ).timeout(const Duration(seconds: 30));
+      return _handleResponse(response);
+    } on SocketException {
+      throw ApiException('Sem ligação à internet. Verifique a sua conexão.', 0);
+    } on http.ClientException {
+      throw ApiException('Não foi possível contactar o servidor.', 0);
+    } catch (e) {
+      if (e is ApiException) rethrow;
+      throw ApiException('Erro de comunicação: ${e.toString()}', 0);
+    }
+  }
+
   Map<String, dynamic> _handleResponse(http.Response response) {
     // Verificar se a resposta é JSON válido (não HTML)
     final contentType = response.headers['content-type'] ?? '';
