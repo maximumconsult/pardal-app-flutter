@@ -11,6 +11,7 @@ class DataProvider extends ChangeNotifier {
   List<dynamic> _incidents = [];
   List<dynamic> _species = [];
   List<dynamic> _incidentTypes = [];
+  List<dynamic> _workers = [];
   bool _isLoading = false;
   String? _error;
 
@@ -21,6 +22,7 @@ class DataProvider extends ChangeNotifier {
   List<dynamic> get incidents => _incidents;
   List<dynamic> get species => _species;
   List<dynamic> get incidentTypes => _incidentTypes;
+  List<dynamic> get workers => _workers;
   bool get isLoading => _isLoading;
   String? get error => _error;
 
@@ -176,6 +178,23 @@ class DataProvider extends ChangeNotifier {
       _isLoading = false;
       notifyListeners();
       return false;
+    }
+  }
+
+  // Workers
+  Future<void> loadWorkers() async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+    try {
+      final response = await _api.get('/workers');
+      _workers = response['workers'] as List<dynamic>? ?? [];
+      _isLoading = false;
+      notifyListeners();
+    } catch (e) {
+      _error = e.toString();
+      _isLoading = false;
+      notifyListeners();
     }
   }
 
