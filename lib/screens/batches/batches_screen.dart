@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/data_provider.dart';
-import '../../providers/localization_provider.dart';
 import '../../utils/constants.dart';
 import 'batch_detail_screen.dart';
 
@@ -10,15 +9,13 @@ class BatchesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localization = context.watch<LocalizationProvider>();
-    
     return Scaffold(
       backgroundColor: AppConstants.backgroundColor,
       appBar: AppBar(
         backgroundColor: AppConstants.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
-        title: Text(localization.translate('batches.title')),
+        title: const Text('Ciclos / Lotes'),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -38,11 +35,11 @@ class BatchesScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.inventory_2_outlined, size: 64, color: Colors.grey[300]),
                   const SizedBox(height: 16),
-                  Text(localization.translate('common.no_data'), style: TextStyle(color: Colors.grey[500], fontSize: 16)),
+                  Text('Nenhum lote encontrado', style: TextStyle(color: Colors.grey[500], fontSize: 16)),
                   const SizedBox(height: 8),
                   TextButton(
                     onPressed: () => data.loadBatches(),
-                    child: Text(localization.translate('common.try_again')),
+                    child: const Text('Actualizar'),
                   ),
                 ],
               ),
@@ -59,19 +56,13 @@ class BatchesScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               children: [
                 if (activeBatches.isNotEmpty) ...[
-                  _SectionHeader(
-                    title: localization.translate('batches.active'),
-                    count: activeBatches.length,
-                  ),
+                  _SectionHeader(title: 'Lotes Activos', count: activeBatches.length),
                   const SizedBox(height: 8),
                   ...activeBatches.map((b) => _BatchCard(batch: b)),
                 ],
                 if (completedBatches.isNotEmpty) ...[
                   const SizedBox(height: 24),
-                  _SectionHeader(
-                    title: localization.translate('batches.completed'),
-                    count: completedBatches.length,
-                  ),
+                  _SectionHeader(title: 'Lotes Concluídos', count: completedBatches.length),
                   const SizedBox(height: 8),
                   ...completedBatches.map((b) => _BatchCard(batch: b, isCompleted: true)),
                 ],
@@ -111,106 +102,117 @@ class _SectionHeader extends StatelessWidget {
 class _BatchCard extends StatelessWidget {
   final Map<String, dynamic> batch;
   final bool isCompleted;
-
   const _BatchCard({required this.batch, this.isCompleted = false});
 
   @override
   Widget build(BuildContext context) {
-    final localization = context.watch<LocalizationProvider>();
-    final icon = AppConstants.speciesEmoji(batch['icon'] ?? '');
-    final progress = (batch['progress'] ?? 0) as num;
+    final species = batch['species'] as Map<String, dynamic>?;
+    final icon = species != null ? AppConstants.speciesEmoji(species['icon'] ?? '') : '🐾';
+    final initial = batch['initial_quantity'] ?? 0;
+    final current = batch['current_quantity'] ?? 0;
+    final mortality = initial > 0 ? ((initial - current) / initial * 100) : 0.0;
 
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (_) => BatchDetailScreen(batchId: batch['id'])),
-      ),
+      onTap: () {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => BatchDetailScreen(batchId: batch['id'] as int),
+          ),
+        );
+      },
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(14),
+        margin: const EdgeInsets.only(bottom: 10),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.04),
-              blurRadius: 6,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Container(
-                  width: 44,
-                  height: 44,
-                  decoration: BoxDecoration(
-                    color: AppConstants.primaryColor.withOpacity(0.08),
-                    borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(14),
+          border: isCompleted ? Border.all(color: Colors.grey.shade200) : null,
+          boxShadow: isCompleted
+              ? null
+              : [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
                   ),
-                  child: Center(child: Text(icon, style: const TextStyle(fontSize: 24))),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 52,
+              height: 52,
+              decoration: BoxDecoration(
+                color: isCompleted
+                    ? Colors.grey.withOpacity(0.1)
+                    : AppConstants.accentColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Center(child: Text(icon, style: const TextStyle(fontSize: 28))),
+            ),
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      Text(
-                        batch['name'] ?? '',
-                        style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+                      Expanded(
+                        child: Text(
+                          batch['name'] ?? '',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                            color: isCompleted ? Colors.grey : Colors.black87,
+                          ),
+                        ),
                       ),
-                      const SizedBox(height: 2),
-                      Text(
-                        batch['species'] ?? '',
-                        style: TextStyle(fontSize: 12, color: Colors.grey[600]),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                        decoration: BoxDecoration(
+                          color: isCompleted
+                              ? Colors.grey.withOpacity(0.1)
+                              : AppConstants.accentColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          AppConstants.statusLabel(batch['status'] ?? ''),
+                          style: TextStyle(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                            color: isCompleted ? Colors.grey : AppConstants.primaryColor,
+                          ),
+                        ),
                       ),
                     ],
                   ),
-                ),
-                if (!isCompleted)
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: AppConstants.accentColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(6),
-                    ),
-                    child: Text(
-                      localization.translate('batches.active'),
-                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppConstants.accentColor),
-                    ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 10),
-            if (!isCompleted) ...[
-              ClipRRect(
-                borderRadius: BorderRadius.circular(3),
-                child: LinearProgressIndicator(
-                  value: progress / 100,
-                  backgroundColor: Colors.grey.shade200,
-                  color: AppConstants.accentColor,
-                  minHeight: 5,
-                ),
-              ),
-              const SizedBox(height: 8),
-            ],
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '${batch['current_quantity'] ?? 0}/${batch['initial_quantity'] ?? 0} ${localization.translate('common.animals')}',
-                  style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-                ),
-                if (!isCompleted)
+                  const SizedBox(height: 4),
                   Text(
-                    '${localization.translate('common.day')} ${batch['days_elapsed'] ?? 0}',
-                    style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppConstants.primaryColor),
+                    '${species?['name'] ?? ''} · $current / $initial animais',
+                    style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                   ),
-              ],
+                  if (mortality > 0) ...[
+                    const SizedBox(height: 4),
+                    Row(
+                      children: [
+                        Icon(Icons.trending_down, size: 14, color: mortality > 5 ? AppConstants.errorColor : Colors.orange),
+                        const SizedBox(width: 4),
+                        Text(
+                          'Mortalidade: ${mortality.toStringAsFixed(1)}%',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: mortality > 5 ? AppConstants.errorColor : Colors.orange,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ],
+              ),
             ),
+            const SizedBox(width: 8),
+            Icon(Icons.chevron_right, color: Colors.grey[400]),
           ],
         ),
       ),

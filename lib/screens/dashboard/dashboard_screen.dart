@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/data_provider.dart';
-import '../../providers/localization_provider.dart';
 import '../../utils/constants.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -10,8 +9,6 @@ class DashboardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final localization = context.watch<LocalizationProvider>();
-    
     return Scaffold(
       backgroundColor: AppConstants.backgroundColor,
       appBar: AppBar(
@@ -22,9 +19,9 @@ class DashboardScreen extends StatelessWidget {
           builder: (_, auth, __) => Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Pardal', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+              const Text('Pardal', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               Text(
-                '${localization.translate('common.hello')}, ${auth.userName}',
+                'Olá, ${auth.userName}',
                 style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.8)),
               ),
             ],
@@ -56,7 +53,7 @@ class DashboardScreen extends StatelessWidget {
                     ElevatedButton.icon(
                       onPressed: () => data.loadDashboard(),
                       icon: const Icon(Icons.refresh),
-                      label: Text(localization.translate('common.try_again')),
+                      label: const Text('Tentar novamente'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppConstants.primaryColor,
                         foregroundColor: Colors.white,
@@ -101,14 +98,14 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     _KpiCard(
                       icon: Icons.inventory_2,
-                      label: localization.translate('dashboard.active_batches'),
+                      label: 'Lotes Activos',
                       value: '${kpis['active_batches'] ?? 0}',
                       color: AppConstants.primaryColor,
                     ),
                     const SizedBox(width: 12),
                     _KpiCard(
                       icon: Icons.pets,
-                      label: localization.translate('dashboard.total_animals'),
+                      label: 'Animais Vivos',
                       value: '${kpis['total_animals'] ?? 0}',
                       color: AppConstants.accentColor,
                     ),
@@ -121,15 +118,15 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     _KpiCard(
                       icon: Icons.warning_amber,
-                      label: localization.translate('navigation.incidents'),
+                      label: 'Ocorrências',
                       value: '${kpis['pending_incidents'] ?? 0}',
                       color: AppConstants.warningColor,
-                      subtitle: '${kpis['urgent_incidents'] ?? 0} ${localization.translate('incidents.urgent')}',
+                      subtitle: '${kpis['urgent_incidents'] ?? 0} urgentes',
                     ),
                     const SizedBox(width: 12),
                     _KpiCard(
                       icon: Icons.receipt_long,
-                      label: localization.translate('dashboard.pending_costs'),
+                      label: 'Custos Pendentes',
                       value: '${kpis['pending_costs_count'] ?? 0}',
                       color: Colors.blue,
                     ),
@@ -154,27 +151,27 @@ class DashboardScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        localization.translate('dashboard.financial_summary'),
-                        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppConstants.primaryDark),
+                      const Text(
+                        'Resumo Financeiro',
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppConstants.primaryDark),
                       ),
                       const SizedBox(height: 12),
                       _FinanceRow(
-                        label: localization.translate('dashboard.active_costs'),
+                        label: 'Custos Activos',
                         value: '${_formatNumber(kpis['total_active_costs'])} $currency',
                         color: AppConstants.errorColor,
                         icon: Icons.trending_down,
                       ),
                       const SizedBox(height: 8),
                       _FinanceRow(
-                        label: localization.translate('dashboard.total_revenue'),
+                        label: 'Receita Total',
                         value: '${_formatNumber(kpis['total_revenue'])} $currency',
                         color: AppConstants.accentColor,
                         icon: Icons.trending_up,
                       ),
                       const Divider(height: 20),
                       _FinanceRow(
-                        label: localization.translate('dashboard.global_profit'),
+                        label: 'Lucro Global',
                         value: '${_formatNumber(kpis['global_profit'])} $currency',
                         color: (kpis['is_profitable'] == true) ? AppConstants.accentColor : AppConstants.errorColor,
                         icon: (kpis['is_profitable'] == true) ? Icons.thumb_up : Icons.thumb_down,
@@ -186,9 +183,9 @@ class DashboardScreen extends StatelessWidget {
                 const SizedBox(height: 24),
 
                 // Lotes activos
-                Text(
-                  localization.translate('dashboard.active_batches'),
-                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppConstants.primaryDark),
+                const Text(
+                  'Lotes Activos',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppConstants.primaryDark),
                 ),
                 const SizedBox(height: 12),
                 if (activeBatchesList.isNotEmpty)
@@ -234,7 +231,7 @@ class DashboardScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 2),
                                     Text(
-                                      '${batch['species'] ?? ''} · ${batch['current_quantity'] ?? 0}/${batch['initial_quantity'] ?? 0} ${localization.translate('common.animals')}',
+                                      '${batch['species'] ?? ''} · ${batch['current_quantity'] ?? 0}/${batch['initial_quantity'] ?? 0} animais',
                                       style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                                     ),
                                   ],
@@ -244,11 +241,11 @@ class DashboardScreen extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: [
                                   Text(
-                                    '${localization.translate('common.day')} ${batch['days_elapsed'] ?? 0}',
+                                    'Dia ${batch['days_elapsed'] ?? 0}',
                                     style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, color: AppConstants.primaryColor),
                                   ),
                                   Text(
-                                    '${batch['days_remaining'] ?? 0} ${localization.translate('common.remaining')}',
+                                    '${batch['days_remaining'] ?? 0} restantes',
                                     style: TextStyle(fontSize: 11, color: Colors.grey[500]),
                                   ),
                                 ],
@@ -272,7 +269,7 @@ class DashboardScreen extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text(
-                                '${localization.translate('common.mortality')}: ${mortalityRate.toStringAsFixed(1)}%',
+                                'Mortalidade: ${mortalityRate.toStringAsFixed(1)}%',
                                 style: TextStyle(
                                   fontSize: 12,
                                   color: mortalityRate > 5 ? AppConstants.errorColor : Colors.grey[600],
@@ -280,7 +277,7 @@ class DashboardScreen extends StatelessWidget {
                                 ),
                               ),
                               Text(
-                                '${localization.translate('common.cost')}: ${_formatNumber(batch['total_cost'])} $currency',
+                                'Custo: ${_formatNumber(batch['total_cost'])} $currency',
                                 style: TextStyle(fontSize: 12, color: Colors.grey[600]),
                               ),
                             ],
@@ -296,8 +293,8 @@ class DashboardScreen extends StatelessWidget {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Center(
-                      child: Text(localization.translate('common.no_data'), style: const TextStyle(color: Colors.grey)),
+                    child: const Center(
+                      child: Text('Nenhum lote activo', style: TextStyle(color: Colors.grey)),
                     ),
                   ),
               ],
@@ -310,8 +307,13 @@ class DashboardScreen extends StatelessWidget {
 
   static String _formatNumber(dynamic value) {
     if (value == null) return '0';
-    final numValue = value is num ? value : 0;
-    return numValue.toStringAsFixed(2);
+    final num n = value is num ? value : num.tryParse(value.toString()) ?? 0;
+    if (n >= 1000000) {
+      return '${(n / 1000000).toStringAsFixed(1)}M';
+    } else if (n >= 1000) {
+      return '${(n / 1000).toStringAsFixed(1)}K';
+    }
+    return n.toStringAsFixed(n.truncateToDouble() == n ? 0 : 2);
   }
 }
 
@@ -334,14 +336,14 @@ class _KpiCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Container(
-        padding: const EdgeInsets.all(14),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.04),
-              blurRadius: 6,
+              blurRadius: 8,
               offset: const Offset(0, 2),
             ),
           ],
@@ -354,26 +356,20 @@ class _KpiCard extends StatelessWidget {
               height: 40,
               decoration: BoxDecoration(
                 color: color.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
+                borderRadius: BorderRadius.circular(10),
               ),
-              child: Icon(icon, color: color, size: 20),
+              child: Icon(icon, color: color, size: 22),
             ),
-            const SizedBox(height: 8),
-            Text(
-              label,
-              style: TextStyle(fontSize: 12, color: Colors.grey[600]),
-            ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 12),
             Text(
               value,
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppConstants.primaryDark),
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: color),
             ),
+            const SizedBox(height: 2),
+            Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
             if (subtitle != null) ...[
-              const SizedBox(height: 4),
-              Text(
-                subtitle!,
-                style: TextStyle(fontSize: 11, color: Colors.grey[500]),
-              ),
+              const SizedBox(height: 2),
+              Text(subtitle!, style: TextStyle(fontSize: 11, color: Colors.grey[500])),
             ],
           ],
         ),
@@ -400,26 +396,23 @@ class _FinanceRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Row(
-          children: [
-            Icon(icon, color: color, size: 18),
-            const SizedBox(width: 8),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 13,
-                fontWeight: bold ? FontWeight.w600 : FontWeight.normal,
-                color: AppConstants.primaryDark,
-              ),
+        Icon(icon, color: color, size: 20),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.grey[700],
+              fontWeight: bold ? FontWeight.bold : FontWeight.normal,
             ),
-          ],
+          ),
         ),
         Text(
           value,
           style: TextStyle(
-            fontSize: 13,
+            fontSize: 14,
             fontWeight: bold ? FontWeight.bold : FontWeight.w600,
             color: color,
           ),

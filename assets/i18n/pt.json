@@ -179,7 +179,8 @@
     "optional": "opcional",
     "none": "Nenhum",
     "additional": "Detalhes adicionais sobre",
-    "cost": "Custo"
+    "cost": "Custo",
+    "dashboard": "Dashboard"
   },
   "production_types": {
     "meat": "Carne",
@@ -211,5 +212,8 @@
     "wrench": "Manutenção",
     "truck": "Transporte",
     "users": "Mão de Obra"
+  },
+  "workers": {
+    "title": "Equipa"
   }
 }

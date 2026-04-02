@@ -179,7 +179,8 @@
     "optional": "optional",
     "none": "None",
     "additional": "Additional details about",
-    "cost": "Cost"
+    "cost": "Cost",
+    "dashboard": "Dashboard"
   },
   "production_types": {
     "meat": "Meat",
@@ -211,5 +212,8 @@
     "wrench": "Maintenance",
     "truck": "Transport",
     "users": "Labor"
+  },
+  "workers": {
+    "title": "Team"
   }
 }

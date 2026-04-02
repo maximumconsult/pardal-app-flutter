@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/data_provider.dart';
-import '../providers/localization_provider.dart';
 import '../utils/constants.dart';
+import '../providers/localization_provider.dart';
 import 'dashboard/dashboard_screen.dart';
 import 'batches/batches_screen.dart';
 import 'incidents/incidents_screen.dart';
+import 'mortalities/mortalities_screen.dart';
+import 'workers/workers_screen.dart';
 import 'profile/profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -18,12 +20,20 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  final _screens = const [
-    DashboardScreen(),
-    BatchesScreen(),
-    IncidentsScreen(),
-    ProfileScreen(),
-  ];
+  late final List<Widget> _screens;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _screens = [
+      const DashboardScreen(),
+      const BatchesScreen(),
+      const IncidentsScreen(),
+      const MortalitiesScreen(),
+      const WorkersScreen(),
+      const ProfileScreen(),
+    ];
+  }
 
   @override
   void initState() {
@@ -41,8 +51,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final localization = context.watch<LocalizationProvider>();
-    
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
@@ -70,19 +78,27 @@ class _HomeScreenState extends State<HomeScreen> {
           items: [
             BottomNavigationBarItem(
               icon: const Icon(Icons.dashboard_rounded),
-              label: localization.translate('navigation.dashboard'),
+              label: context.watch<LocalizationProvider>().translate('common.dashboard'),
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.inventory_2_rounded),
-              label: localization.translate('navigation.batches'),
+              label: context.watch<LocalizationProvider>().translate('batches.title'),
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.warning_amber_rounded),
-              label: localization.translate('navigation.incidents'),
+              label: context.watch<LocalizationProvider>().translate('incidents.title'),
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.trending_down),
+              label: context.watch<LocalizationProvider>().translate('common.mortality'),
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.people),
+              label: context.watch<LocalizationProvider>().translate('workers.title'),
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.person_rounded),
-              label: localization.translate('navigation.profile'),
+              label: context.watch<LocalizationProvider>().translate('profile.profile'),
             ),
           ],
         ),

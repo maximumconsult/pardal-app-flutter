@@ -3,39 +3,27 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/data_provider.dart';
-import 'providers/localization_provider.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'utils/constants.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
     statusBarIconBrightness: Brightness.light,
   ));
-  
-  // Inicializar LocalizationProvider
-  final localizationProvider = LocalizationProvider();
-  await localizationProvider.initialize();
-  
-  runApp(PardalApp(localizationProvider: localizationProvider));
+  runApp(const PardalApp());
 }
 
 class PardalApp extends StatelessWidget {
-  final LocalizationProvider localizationProvider;
-  
-  const PardalApp({
-    super.key,
-    required this.localizationProvider,
-  });
+  const PardalApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: localizationProvider),
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => DataProvider()),
       ],
@@ -96,8 +84,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final localization = context.watch<LocalizationProvider>();
-    
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -124,9 +110,9 @@ class _SplashScreenState extends State<SplashScreen> {
                 height: 140,
               ),
               const SizedBox(height: 16),
-              Text(
-                localization.translate('app_title'),
-                style: const TextStyle(
+              const Text(
+                'PARDAL',
+                style: TextStyle(
                   fontSize: 36,
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -135,7 +121,7 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
               const SizedBox(height: 8),
               Text(
-                localization.translate('app_slogan'),
+                'controle a sua criação, proteja o seu lucro',
                 style: TextStyle(fontSize: 14, color: Colors.white.withOpacity(0.8)),
               ),
               const SizedBox(height: 48),
