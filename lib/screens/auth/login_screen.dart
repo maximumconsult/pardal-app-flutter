@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/localization_provider.dart';
 import '../../utils/constants.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -108,7 +109,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           keyboardType: TextInputType.emailAddress,
                           style: const TextStyle(color: Color(0xFF1B4332)),
                           decoration: InputDecoration(
-                            labelText: 'Email',
+                            labelText: Consumer<LocalizationProvider>(
+                              builder: (_, loc, __) => loc.translate('common.email'),
+                            ) as String,
+                            // labelText: 'Email',
                             labelStyle: TextStyle(color: Colors.grey.shade600),
                             prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFF2D6A4F)),
                             enabledBorder: OutlineInputBorder(
@@ -145,7 +149,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           obscureText: _obscurePassword,
                           style: const TextStyle(color: Color(0xFF1B4332)),
                           decoration: InputDecoration(
-                            labelText: 'Senha',
+                            labelText: Consumer<LocalizationProvider>(
+                              builder: (_, loc, __) => loc.translate('common.password'),
+                            ) as String,
+                            // labelText: 'Senha',
                             labelStyle: TextStyle(color: Colors.grey.shade600),
                             prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF2D6A4F)),
                             suffixIcon: IconButton(
@@ -239,8 +246,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                           color: Colors.white,
                                         ),
                                       )
-                                    : const Text(
-                                        'Entrar',
+                                    : Consumer<LocalizationProvider>(
+                                        builder: (_, loc, __) => Text(
+                                          loc.translate('common.login'),
                                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                       ),
                               ),
@@ -291,13 +299,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           height: 52,
                           child: OutlinedButton(
                             onPressed: () {
-                              // TODO: implementar registo
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('Funcionalidade de registo em desenvolvimento.'),
-                                  backgroundColor: Color(0xFF2D6A4F),
-                                ),
-                              );
+                              Navigator.of(context).pushNamed('/register');
                             },
                             style: OutlinedButton.styleFrom(
                               foregroundColor: const Color(0xFF1B4332),

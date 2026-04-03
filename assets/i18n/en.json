@@ -180,7 +180,12 @@
     "none": "None",
     "additional": "Additional details about",
     "cost": "Cost",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "email": "Email",
+    "password": "Password",
+    "login": "Login",
+    "register": "Register",
+    "create_account": "Create Account"
   },
   "production_types": {
     "meat": "Meat",

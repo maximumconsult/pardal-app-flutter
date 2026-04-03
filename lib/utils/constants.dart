@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppConstants {
   // API - alterar para o URL do servidor de produção
-  static const String apiBaseUrl = 'https://8000-ikrzdzycyeuzxmrjky9yu-7f5ea5b5.us1.manus.computer/api/v1';
+  static const String apiBaseUrl = 'https://app.pardal.app/api/v1';
 
   // Cores do Pardal (verde escuro)
   static const Color primaryColor = Color(0xFF1B4332);

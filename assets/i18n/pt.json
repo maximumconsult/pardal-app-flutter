@@ -180,7 +180,12 @@
     "none": "Nenhum",
     "additional": "Detalhes adicionais sobre",
     "cost": "Custo",
-    "dashboard": "Dashboard"
+    "dashboard": "Dashboard",
+    "email": "Email",
+    "password": "Senha",
+    "login": "Entrar",
+    "register": "Registar",
+    "create_account": "Criar Conta"
   },
   "production_types": {
     "meat": "Carne",
