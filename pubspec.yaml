@@ -26,3 +26,5 @@ flutter:
   assets:
     - assets/images/logo.png
     - assets/images/logo_icon.png
+    - assets/i18n/pt.json
+    - assets/i18n/en.json
