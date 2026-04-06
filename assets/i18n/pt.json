@@ -149,6 +149,48 @@
     "terms": "Termos de Serviço",
     "privacy": "Política de Privacidade"
   },
+
+  "production_types": {
+    "meat": "Carne",
+    "egg": "Ovos",
+    "fish": "Peixe",
+    "dairy": "Lacticínios"
+  },
+  "species": {
+    "chicken": "Frango de Corte",
+    "egg_layer": "Galinha Poedeira",
+    "duck": "Pato",
+    "quail": "Codorniz",
+    "fish": "Peixe",
+    "pig": "Porco",
+    "goat": "Caprino",
+    "cow": "Vaca",
+    "rabbit": "Coelho",
+    "sheep": "Ovelha",
+    "turkey": "Peru",
+    "horse": "Cavalo",
+    "bee": "Abelha"
+  },
+  "cost_categories": {
+    "grain": "Ração",
+    "syringe": "Vacinas",
+    "pill": "Medicamentos",
+    "bolt": "Electricidade",
+    "droplet": "Água",
+    "wrench": "Manutenção",
+    "truck": "Transporte",
+    "users": "Mão de Obra"
+  },
+  "workers": {
+    "title": "Equipa",
+    "add_worker": "Adicionar Colaborador",
+    "fill_data": "Preencha os dados do novo colaborador",
+    "role": "Função",
+    "worker": "Colaborador",
+    "manager": "Gestor",
+    "no_workers": "Nenhum colaborador disponível",
+    "error_loading": "Erro ao carregar colaboradores"
+  },
   "common": {
     "loading": "Carregando...",
     "error": "Erro",
@@ -185,40 +227,13 @@
     "password": "Senha",
     "login": "Entrar",
     "register": "Registar",
-    "create_account": "Criar Conta"
-  },
-  "production_types": {
-    "meat": "Carne",
-    "egg": "Ovos",
-    "fish": "Peixe",
-    "dairy": "Lacticínios"
-  },
-  "species": {
-    "chicken": "Frango de Corte",
-    "egg_layer": "Galinha Poedeira",
-    "duck": "Pato",
-    "quail": "Codorniz",
-    "fish": "Peixe",
-    "pig": "Porco",
-    "goat": "Caprino",
-    "cow": "Vaca",
-    "rabbit": "Coelho",
-    "sheep": "Ovelha",
-    "turkey": "Peru",
-    "horse": "Cavalo",
-    "bee": "Abelha"
-  },
-  "cost_categories": {
-    "grain": "Ração",
-    "syringe": "Vacinas",
-    "pill": "Medicamentos",
-    "bolt": "Electricidade",
-    "droplet": "Água",
-    "wrench": "Manutenção",
-    "truck": "Transporte",
-    "users": "Mão de Obra"
-  },
-  "workers": {
-    "title": "Equipa"
+    "create_account": "Criar Conta",
+    "full_name": "Nome Completo *",
+    "name_required": "Nome é obrigatório",
+    "email_required": "Email é obrigatório",
+    "invalid_email": "Email inválido",
+    "phone": "Telefone",
+    "password_required": "Palavra-passe é obrigatória",
+    "min_6_chars": "Mínimo 6 caracteres"
   }
 }

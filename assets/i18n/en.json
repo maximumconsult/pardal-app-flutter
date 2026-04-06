@@ -149,6 +149,48 @@
     "terms": "Terms of Service",
     "privacy": "Privacy Policy"
   },
+
+  "production_types": {
+    "meat": "Meat",
+    "egg": "Eggs",
+    "fish": "Fish",
+    "dairy": "Dairy"
+  },
+  "species": {
+    "chicken": "Chicken",
+    "egg_layer": "Egg Layer",
+    "duck": "Duck",
+    "quail": "Quail",
+    "fish": "Fish",
+    "pig": "Pig",
+    "goat": "Goat",
+    "cow": "Cow",
+    "rabbit": "Rabbit",
+    "sheep": "Sheep",
+    "turkey": "Turkey",
+    "horse": "Horse",
+    "bee": "Bee"
+  },
+  "cost_categories": {
+    "grain": "Feed",
+    "syringe": "Vaccines",
+    "pill": "Medications",
+    "bolt": "Electricity",
+    "droplet": "Water",
+    "wrench": "Maintenance",
+    "truck": "Transport",
+    "users": "Labor"
+  },
+  "workers": {
+    "title": "Team",
+    "add_worker": "Add Team Member",
+    "fill_data": "Fill in the new team member's data",
+    "role": "Role",
+    "worker": "Worker",
+    "manager": "Manager",
+    "no_workers": "No team members available",
+    "error_loading": "Error loading team members"
+  },
   "common": {
     "loading": "Loading...",
     "error": "Error",
@@ -185,40 +227,13 @@
     "password": "Password",
     "login": "Login",
     "register": "Register",
-    "create_account": "Create Account"
-  },
-  "production_types": {
-    "meat": "Meat",
-    "egg": "Eggs",
-    "fish": "Fish",
-    "dairy": "Dairy"
-  },
-  "species": {
-    "chicken": "Chicken",
-    "egg_layer": "Egg Layer",
-    "duck": "Duck",
-    "quail": "Quail",
-    "fish": "Fish",
-    "pig": "Pig",
-    "goat": "Goat",
-    "cow": "Cow",
-    "rabbit": "Rabbit",
-    "sheep": "Sheep",
-    "turkey": "Turkey",
-    "horse": "Horse",
-    "bee": "Bee"
-  },
-  "cost_categories": {
-    "grain": "Feed",
-    "syringe": "Vaccines",
-    "pill": "Medications",
-    "bolt": "Electricity",
-    "droplet": "Water",
-    "wrench": "Maintenance",
-    "truck": "Transport",
-    "users": "Labor"
-  },
-  "workers": {
-    "title": "Team"
+    "create_account": "Create Account",
+    "full_name": "Full Name *",
+    "name_required": "Name is required",
+    "email_required": "Email is required",
+    "invalid_email": "Invalid email",
+    "phone": "Phone",
+    "password_required": "Password is required",
+    "min_6_chars": "Minimum 6 characters"
   }
 }

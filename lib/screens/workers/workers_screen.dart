@@ -65,44 +65,44 @@ class _WorkersScreenState extends State<WorkersScreen> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Adicionar Colaborador',
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  Text(
+                    context.watch<LocalizationProvider>().translate('workers.add_worker'),
+                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Preencha os dados do novo colaborador',
+                    context.watch<LocalizationProvider>().translate('workers.fill_data'),
                     style: TextStyle(fontSize: 14, color: Colors.grey[600]),
                   ),
                   const SizedBox(height: 20),
 
                   // Nome
-                  const Text('Nome Completo *', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text(context.watch<LocalizationProvider>().translate('common.full_name'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 6),
                   TextFormField(
                     controller: nameCtrl,
                     decoration: _inputDecoration('Ex: João Silva'),
-                    validator: (v) => (v == null || v.isEmpty) ? 'Nome é obrigatório' : null,
+                    validator: (v) => (v == null || v.isEmpty) ? context.watch<LocalizationProvider>().translate('common.name_required') : null,
                   ),
                   const SizedBox(height: 14),
 
                   // Email
-                  const Text('Email *', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text(context.watch<LocalizationProvider>().translate('common.email'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 6),
                   TextFormField(
                     controller: emailCtrl,
                     keyboardType: TextInputType.emailAddress,
                     decoration: _inputDecoration('Ex: joao@email.com'),
                     validator: (v) {
-                      if (v == null || v.isEmpty) return 'Email é obrigatório';
-                      if (!v.contains('@')) return 'Email inválido';
+                      if (v == null || v.isEmpty) return context.watch<LocalizationProvider>().translate('common.email_required');
+                      if (!v.contains('@')) return context.watch<LocalizationProvider>().translate('common.invalid_email');
                       return null;
                     },
                   ),
                   const SizedBox(height: 14),
 
                   // Telefone
-                  const Text('Telefone', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text(context.watch<LocalizationProvider>().translate('common.phone'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 6),
                   TextFormField(
                     controller: phoneCtrl,
@@ -112,22 +112,22 @@ class _WorkersScreenState extends State<WorkersScreen> {
                   const SizedBox(height: 14),
 
                   // Password
-                  const Text('Palavra-passe *', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text(context.watch<LocalizationProvider>().translate('common.password'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 6),
                   TextFormField(
                     controller: passwordCtrl,
                     obscureText: true,
                     decoration: _inputDecoration('Mínimo 6 caracteres'),
                     validator: (v) {
-                      if (v == null || v.isEmpty) return 'Palavra-passe é obrigatória';
-                      if (v.length < 6) return 'Mínimo 6 caracteres';
+                      if (v == null || v.isEmpty) return context.watch<LocalizationProvider>().translate('common.password_required');
+                      if (v.length < 6) return context.watch<LocalizationProvider>().translate('common.min_6_chars');
                       return null;
                     },
                   ),
                   const SizedBox(height: 14),
 
                   // Função
-                  const Text('Função *', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text(context.watch<LocalizationProvider>().translate('workers.role'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 8),
                   Row(
                     children: [
@@ -149,7 +149,7 @@ class _WorkersScreenState extends State<WorkersScreen> {
                                 Icon(Icons.person, color: selectedRole == 'worker' ? AppConstants.primaryColor : Colors.grey[400], size: 28),
                                 const SizedBox(height: 4),
                                 Text(
-                                  'Colaborador',
+                                  context.watch<LocalizationProvider>().translate('workers.worker'),
                                   style: TextStyle(
                                     fontWeight: selectedRole == 'worker' ? FontWeight.w700 : FontWeight.w500,
                                     color: selectedRole == 'worker' ? AppConstants.primaryColor : Colors.grey[600],
@@ -180,7 +180,7 @@ class _WorkersScreenState extends State<WorkersScreen> {
                                 Icon(Icons.manage_accounts, color: selectedRole == 'manager' ? AppConstants.accentColor : Colors.grey[400], size: 28),
                                 const SizedBox(height: 4),
                                 Text(
-                                  'Gestor',
+                                  context.watch<LocalizationProvider>().translate('workers.manager'),
                                   style: TextStyle(
                                     fontWeight: selectedRole == 'manager' ? FontWeight.w700 : FontWeight.w500,
                                     color: selectedRole == 'manager' ? AppConstants.accentColor : Colors.grey[600],
