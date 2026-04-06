@@ -84,6 +84,62 @@ class _LoginScreenState extends State<LoginScreen> {
                 ),
                 const SizedBox(height: 32),
 
+                // Seletor de Idioma
+                Consumer<LocalizationProvider>(
+                  builder: (_, locProvider, __) => Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () => locProvider.setLanguage('pt'),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: locProvider.currentLanguage == 'pt' ? Colors.white : Colors.transparent,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 2,
+                              ),
+                            ),
+                            child: Text(
+                              'Português',
+                              style: TextStyle(
+                                color: locProvider.currentLanguage == 'pt' ? const Color(0xFF1B4332) : Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 16),
+                        GestureDetector(
+                          onTap: () => locProvider.setLanguage('en'),
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                            decoration: BoxDecoration(
+                              color: locProvider.currentLanguage == 'en' ? Colors.white : Colors.transparent,
+                              borderRadius: BorderRadius.circular(20),
+                              border: Border.all(
+                                color: Colors.white,
+                                width: 2,
+                              ),
+                            ),
+                            child: Text(
+                              'English',
+                              style: TextStyle(
+                                color: locProvider.currentLanguage == 'en' ? const Color(0xFF1B4332) : Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 32),
+
                 // Formulário com fundo branco arredondado
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 24),
@@ -109,10 +165,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           keyboardType: TextInputType.emailAddress,
                           style: const TextStyle(color: Color(0xFF1B4332)),
                           decoration: InputDecoration(
-                            labelText: Consumer<LocalizationProvider>(
-                              builder: (_, loc, __) => loc.translate('common.email'),
-                            ) as String,
-                            // labelText: 'Email',
+                            labelText: 'Email',
                             labelStyle: TextStyle(color: Colors.grey.shade600),
                             prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFF2D6A4F)),
                             enabledBorder: OutlineInputBorder(
@@ -149,10 +202,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           obscureText: _obscurePassword,
                           style: const TextStyle(color: Color(0xFF1B4332)),
                           decoration: InputDecoration(
-                            labelText: Consumer<LocalizationProvider>(
-                              builder: (_, loc, __) => loc.translate('common.password'),
-                            ) as String,
-                            // labelText: 'Senha',
+                            labelText: 'Senha',
                             labelStyle: TextStyle(color: Colors.grey.shade600),
                             prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF2D6A4F)),
                             suffixIcon: IconButton(
@@ -249,7 +299,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                     : Consumer<LocalizationProvider>(
                                         builder: (_, loc, __) => Text(
                                           loc.translate('common.login'),
-                                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                                        ),
                                       ),
                               ),
                             );

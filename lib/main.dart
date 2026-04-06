@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/data_provider.dart';
+import 'providers/localization_provider.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'utils/constants.dart';
@@ -26,6 +27,7 @@ class PardalApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => DataProvider()),
+        ChangeNotifierProvider(create: (_) => LocalizationProvider()),
       ],
       child: MaterialApp(
         title: 'Pardal',
@@ -70,7 +72,13 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> _checkAuth() async {
-    await Future.delayed(const Duration(milliseconds: 1500));
+    await Future.delayed(const Duration(milliseconds: 500));
+    if (!mounted) return;
+    
+    // Inicializar LocalizationProvider
+    final locProvider = context.read<LocalizationProvider>();
+    await locProvider.initialize();
+    
     if (!mounted) return;
     final auth = context.read<AuthProvider>();
     final isLoggedIn = await auth.tryAutoLogin();

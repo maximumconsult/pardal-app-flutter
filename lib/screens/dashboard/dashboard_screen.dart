@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/data_provider.dart';
+import '../../providers/localization_provider.dart';
 import '../../utils/constants.dart';
 
 class DashboardScreen extends StatelessWidget {
@@ -53,7 +54,7 @@ class DashboardScreen extends StatelessWidget {
                     ElevatedButton.icon(
                       onPressed: () => data.loadDashboard(),
                       icon: const Icon(Icons.refresh),
-                      label: const Text('Tentar novamente'),
+                      label: Text(context.watch<LocalizationProvider>().translate('common.try_again')),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppConstants.primaryColor,
                         foregroundColor: Colors.white,
@@ -98,14 +99,14 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     _KpiCard(
                       icon: Icons.inventory_2,
-                      label: 'Lotes Activos',
+                      label: context.watch<LocalizationProvider>().translate('dashboard.active_batches'),
                       value: '${kpis['active_batches'] ?? 0}',
                       color: AppConstants.primaryColor,
                     ),
                     const SizedBox(width: 12),
                     _KpiCard(
                       icon: Icons.pets,
-                      label: 'Animais Vivos',
+                      label: context.watch<LocalizationProvider>().translate('dashboard.live_animals'),
                       value: '${kpis['total_animals'] ?? 0}',
                       color: AppConstants.accentColor,
                     ),
@@ -118,7 +119,7 @@ class DashboardScreen extends StatelessWidget {
                   children: [
                     _KpiCard(
                       icon: Icons.warning_amber,
-                      label: 'Ocorrências',
+                      label: context.watch<LocalizationProvider>().translate('incidents.title'),
                       value: '${kpis['pending_incidents'] ?? 0}',
                       color: AppConstants.warningColor,
                       subtitle: '${kpis['urgent_incidents'] ?? 0} urgentes',
@@ -126,7 +127,7 @@ class DashboardScreen extends StatelessWidget {
                     const SizedBox(width: 12),
                     _KpiCard(
                       icon: Icons.receipt_long,
-                      label: 'Custos Pendentes',
+                      label: context.watch<LocalizationProvider>().translate('dashboard.pending_costs'),
                       value: '${kpis['pending_costs_count'] ?? 0}',
                       color: Colors.blue,
                     ),
@@ -151,27 +152,27 @@ class DashboardScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'Resumo Financeiro',
+                      Text(
+                        context.watch<LocalizationProvider>().translate('dashboard.financial_summary'),
                         style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: AppConstants.primaryDark),
                       ),
                       const SizedBox(height: 12),
                       _FinanceRow(
-                        label: 'Custos Activos',
+                        label: context.watch<LocalizationProvider>().translate('dashboard.active_costs'),
                         value: '${_formatNumber(kpis['total_active_costs'])} $currency',
                         color: AppConstants.errorColor,
                         icon: Icons.trending_down,
                       ),
                       const SizedBox(height: 8),
                       _FinanceRow(
-                        label: 'Receita Total',
+                        label: context.watch<LocalizationProvider>().translate('dashboard.total_revenue'),
                         value: '${_formatNumber(kpis['total_revenue'])} $currency',
                         color: AppConstants.accentColor,
                         icon: Icons.trending_up,
                       ),
                       const Divider(height: 20),
                       _FinanceRow(
-                        label: 'Lucro Global',
+                        label: context.watch<LocalizationProvider>().translate('dashboard.global_profit'),
                         value: '${_formatNumber(kpis['global_profit'])} $currency',
                         color: (kpis['is_profitable'] == true) ? AppConstants.accentColor : AppConstants.errorColor,
                         icon: (kpis['is_profitable'] == true) ? Icons.thumb_up : Icons.thumb_down,
@@ -183,8 +184,8 @@ class DashboardScreen extends StatelessWidget {
                 const SizedBox(height: 24),
 
                 // Lotes activos
-                const Text(
-                  'Lotes Activos',
+                Text(
+                  context.watch<LocalizationProvider>().translate('dashboard.active_batches'),
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppConstants.primaryDark),
                 ),
                 const SizedBox(height: 12),
@@ -293,8 +294,8 @@ class DashboardScreen extends StatelessWidget {
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: const Center(
-                      child: Text('Nenhum lote activo', style: TextStyle(color: Colors.grey)),
+                    child: Center(
+                      child: Text(context.watch<LocalizationProvider>().translate('batches.no_batches'), style: const TextStyle(color: Colors.grey)),
                     ),
                   ),
               ],
