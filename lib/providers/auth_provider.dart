@@ -52,6 +52,39 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<bool> register({
+    required String name,
+    required String email,
+    required String password,
+    required String farmName,
+    String? phone,
+  }) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+    try {
+      final body = <String, dynamic>{
+        'name': name,
+        'email': email,
+        'password': password,
+        'password_confirmation': password,
+        'farm_name': farmName,
+      };
+      if (phone != null && phone.isNotEmpty) body['phone'] = phone;
+      final response = await _api.post('/auth/register', body);
+      await _api.setToken(response['token'] as String);
+      _user = response['user'] as Map<String, dynamic>;
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      _isLoading = false;
+      notifyListeners();
+      return false;
+    }
+  }
+
   Future<void> logout() async {
     try {
       await _api.post('/auth/logout', {});

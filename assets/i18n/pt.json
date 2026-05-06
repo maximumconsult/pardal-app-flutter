@@ -14,7 +14,23 @@
     "forgot_password": "Esqueceu a senha?",
     "forgot_password_msg": "Funcionalidade de recuperação de senha em desenvolvimento.",
     "or": "ou",
-    "create_account": "Criar Conta"
+    "create_account": "Criar Conta",
+    "register": "Registar",
+    "register_subtitle": "Crie a sua conta para gerir a sua quinta",
+    "name": "Nome Completo",
+    "name_hint": "Introduza o seu nome",
+    "name_required": "Nome é obrigatório",
+    "phone": "Telefone",
+    "phone_hint": "Introduza o seu telefone",
+    "farm_name": "Nome da Quinta",
+    "farm_name_hint": "Introduza o nome da quinta",
+    "farm_name_required": "Nome da quinta é obrigatório",
+    "confirm_password": "Confirmar Senha",
+    "confirm_password_hint": "Repita a sua senha",
+    "confirm_password_error": "As senhas não coincidem",
+    "password_min_length": "A senha deve ter pelo menos 6 caracteres",
+    "passwords_dont_match": "As senhas não coincidem",
+    "already_have_account": "Já tem uma conta? Entrar"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -81,7 +97,8 @@
     "completed_batches": "Lotes Concluídos",
     "refresh": "Actualizar",
     "animals": "animais",
-    "mortality_label": "Mortalidade: {rate}%"
+    "mortality_label": "Mortalidade: {rate}%",
+    "initial_quantity": "Quantidade Inicial"
   },
   "batch_detail": {
     "title": "Detalhe do Lote",
@@ -384,6 +401,19 @@
     "phone": "Telefone",
     "password_required": "Palavra-passe é obrigatória",
     "min_6_chars": "Mínimo 6 caracteres",
-    "refresh": "Actualizar"
+    "refresh": "Actualizar",
+    "required": "Campo obrigatório",
+    "invalid_number": "Número inválido"
+  },
+  "errors": {
+    "no_internet": "Sem ligação à internet. Verifique a sua conexão.",
+    "server_unreachable": "Não foi possível contactar o servidor.",
+    "communication_error": "Erro de comunicação. Tente novamente.",
+    "not_found": "Recurso não encontrado.",
+    "server_error": "Erro interno do servidor. Tente novamente mais tarde.",
+    "session_expired": "Sessão expirada. Faça login novamente.",
+    "unexpected_response": "O servidor retornou uma resposta inesperada.",
+    "invalid_response": "Resposta inválida do servidor.",
+    "validation_error": "Erro de validação. Verifique os dados."
   }
 }

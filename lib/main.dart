@@ -5,6 +5,7 @@ import 'providers/auth_provider.dart';
 import 'providers/data_provider.dart';
 import 'providers/localization_provider.dart';
 import 'screens/auth/login_screen.dart';
+import 'screens/auth/register_screen.dart';
 import 'screens/home_screen.dart';
 import 'utils/constants.dart';
 
@@ -50,6 +51,7 @@ class PardalApp extends StatelessWidget {
         home: const SplashScreen(),
         routes: {
           '/login': (_) => const LoginScreen(),
+          '/register': (_) => const RegisterScreen(),
           '/home': (_) => const HomeScreen(),
         },
       ),

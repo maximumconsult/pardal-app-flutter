@@ -51,8 +51,8 @@ class _BatchDetailScreenState extends State<BatchDetailScreen> {
           final initial = batch['initial_quantity'] ?? 0;
           final current = batch['current_quantity'] ?? 0;
           final mortality = initial > 0 ? ((initial - current) / initial * 100) : 0.0;
-          final mortalities = batch['mortalities'] as List<dynamic>? ?? [];
-          final costs = batch['costs'] as List<dynamic>? ?? [];
+          final mortalities = batch['mortality_logs'] as List<dynamic>? ?? [];
+          final costs = batch['approved_costs'] as List<dynamic>? ?? [];
 
           return RefreshIndicator(
             color: AppConstants.primaryColor,

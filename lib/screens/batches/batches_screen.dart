@@ -5,8 +5,147 @@ import '../../providers/localization_provider.dart';
 import '../../utils/constants.dart';
 import 'batch_detail_screen.dart';
 
-class BatchesScreen extends StatelessWidget {
+class BatchesScreen extends StatefulWidget {
   const BatchesScreen({super.key});
+
+  @override
+  State<BatchesScreen> createState() => _BatchesScreenState();
+}
+
+class _BatchesScreenState extends State<BatchesScreen> {
+  void _showAddBatchDialog(BuildContext context, LocalizationProvider loc) {
+    final nameCtrl = TextEditingController();
+    final quantityCtrl = TextEditingController();
+    final formKey = GlobalKey<FormState>();
+    int? selectedSpeciesId;
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (ctx) {
+        return StatefulBuilder(
+          builder: (ctx, setModalState) {
+            final data = context.read<DataProvider>();
+            return Container(
+              padding: EdgeInsets.only(
+                top: 24,
+                left: 24,
+                right: 24,
+                bottom: MediaQuery.of(ctx).viewInsets.bottom + 24,
+              ),
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+              ),
+              child: Form(
+                key: formKey,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Container(
+                          width: 40,
+                          height: 4,
+                          decoration: BoxDecoration(
+                            color: Colors.grey[300],
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Text(
+                        loc.translate('batches.add_batch'),
+                        style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 16),
+                      TextFormField(
+                        controller: nameCtrl,
+                        decoration: InputDecoration(
+                          labelText: loc.translate('batches.batch_name'),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          prefixIcon: const Icon(Icons.label_outline),
+                        ),
+                        validator: (v) => v == null || v.isEmpty ? loc.translate('common.required') : null,
+                      ),
+                      const SizedBox(height: 12),
+                      DropdownButtonFormField<int>(
+                        value: selectedSpeciesId,
+                        decoration: InputDecoration(
+                          labelText: loc.translate('batches.species'),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          prefixIcon: const Icon(Icons.pets),
+                        ),
+                        items: data.species.map<DropdownMenuItem<int>>((s) {
+                          return DropdownMenuItem<int>(
+                            value: s['id'] as int,
+                            child: Text(s['name'] ?? ''),
+                          );
+                        }).toList(),
+                        onChanged: (v) => setModalState(() => selectedSpeciesId = v),
+                        validator: (v) => v == null ? loc.translate('common.required') : null,
+                      ),
+                      const SizedBox(height: 12),
+                      TextFormField(
+                        controller: quantityCtrl,
+                        keyboardType: TextInputType.number,
+                        decoration: InputDecoration(
+                          labelText: loc.translate('batches.initial_quantity'),
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          prefixIcon: const Icon(Icons.numbers),
+                        ),
+                        validator: (v) {
+                          if (v == null || v.isEmpty) return loc.translate('common.required');
+                          if (int.tryParse(v) == null) return loc.translate('common.invalid_number');
+                          return null;
+                        },
+                      ),
+                      const SizedBox(height: 20),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: () async {
+                            if (!formKey.currentState!.validate()) return;
+                            final now = DateTime.now();
+                            final batchData = {
+                              'name': nameCtrl.text.trim(),
+                              'species_id': selectedSpeciesId,
+                              'initial_quantity': int.parse(quantityCtrl.text.trim()),
+                              'start_date': now.toIso8601String().split('T')[0],
+                            };
+                            try {
+                              await data.storeBatch(batchData);
+                              if (ctx.mounted) Navigator.of(ctx).pop();
+                              data.loadBatches();
+                            } catch (e) {
+                              if (ctx.mounted) {
+                                ScaffoldMessenger.of(ctx).showSnackBar(
+                                  SnackBar(content: Text(e.toString()), backgroundColor: AppConstants.errorColor),
+                                );
+                              }
+                            }
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppConstants.primaryColor,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                          ),
+                          child: Text(loc.translate('common.save'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +165,13 @@ class BatchesScreen extends StatelessWidget {
             onPressed: () => context.read<DataProvider>().loadBatches(),
           ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          _showAddBatchDialog(context, loc);
+        },
+        backgroundColor: AppConstants.primaryColor,
+        child: const Icon(Icons.add, color: Colors.white),
       ),
       body: Consumer<DataProvider>(
         builder: (_, data, __) {

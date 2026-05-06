@@ -20,21 +20,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  late final List<Widget> _screens;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    _screens = [
-      const DashboardScreen(),
-      const BatchesScreen(),
-      const IncidentsScreen(),
-      const MortalitiesScreen(),
-      const WorkersScreen(),
-      const ProfileScreen(),
-    ];
-  }
-
   @override
   void initState() {
     super.initState();
@@ -46,15 +31,29 @@ class _HomeScreenState extends State<HomeScreen> {
       data.loadCategories();
       data.loadSpecies();
       data.loadIncidents();
+      data.loadMortalities();
+      data.loadWorkers();
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.watch<LocalizationProvider>();
+
+    // Não usar ValueKey - deixar o Provider notificar e reconstruir naturalmente
+    final screens = <Widget>[
+      const DashboardScreen(),
+      const BatchesScreen(),
+      const IncidentsScreen(),
+      const MortalitiesScreen(),
+      const WorkersScreen(),
+      const ProfileScreen(),
+    ];
+
     return Scaffold(
       body: IndexedStack(
         index: _currentIndex,
-        children: _screens,
+        children: screens,
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
@@ -78,27 +77,27 @@ class _HomeScreenState extends State<HomeScreen> {
           items: [
             BottomNavigationBarItem(
               icon: const Icon(Icons.dashboard_rounded),
-              label: context.watch<LocalizationProvider>().translate('common.dashboard'),
+              label: loc.translate('common.dashboard'),
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.inventory_2_rounded),
-              label: context.watch<LocalizationProvider>().translate('batches.title'),
+              label: loc.translate('batches.title'),
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.warning_amber_rounded),
-              label: context.watch<LocalizationProvider>().translate('incidents.title'),
+              label: loc.translate('incidents.title'),
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.trending_down),
-              label: context.watch<LocalizationProvider>().translate('common.mortality'),
+              label: loc.translate('common.mortality'),
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.people),
-              label: context.watch<LocalizationProvider>().translate('workers.title'),
+              label: loc.translate('workers.title'),
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.person_rounded),
-              label: context.watch<LocalizationProvider>().translate('profile.profile'),
+              label: loc.translate('profile.profile'),
             ),
           ],
         ),

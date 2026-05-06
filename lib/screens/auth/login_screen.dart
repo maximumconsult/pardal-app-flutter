@@ -56,7 +56,53 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                const SizedBox(height: 40),
+                const SizedBox(height: 16),
+                // Seletor de idioma
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () => loc.setLocale('pt'),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: loc.currentLocale == 'pt' ? Colors.white : Colors.transparent,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Colors.white.withOpacity(0.5)),
+                        ),
+                        child: Text(
+                          'PT',
+                          style: TextStyle(
+                            color: loc.currentLocale == 'pt' ? const Color(0xFF1B4332) : Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    GestureDetector(
+                      onTap: () => loc.setLocale('en'),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: loc.currentLocale == 'en' ? Colors.white : Colors.transparent,
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: Colors.white.withOpacity(0.5)),
+                        ),
+                        child: Text(
+                          'EN',
+                          style: TextStyle(
+                            color: loc.currentLocale == 'en' ? const Color(0xFF1B4332) : Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
                 // Logo
                 Image.asset(
                   'assets/images/logo_icon.png',

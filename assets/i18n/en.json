@@ -14,7 +14,23 @@
     "forgot_password": "Forgot password?",
     "forgot_password_msg": "Password recovery feature is under development.",
     "or": "or",
-    "create_account": "Create Account"
+    "create_account": "Create Account",
+    "register": "Register",
+    "register_subtitle": "Create your account to manage your farm",
+    "name": "Full Name",
+    "name_hint": "Enter your name",
+    "name_required": "Name is required",
+    "phone": "Phone",
+    "phone_hint": "Enter your phone number",
+    "farm_name": "Farm Name",
+    "farm_name_hint": "Enter your farm name",
+    "farm_name_required": "Farm name is required",
+    "confirm_password": "Confirm Password",
+    "confirm_password_hint": "Repeat your password",
+    "confirm_password_error": "Passwords do not match",
+    "password_min_length": "Password must be at least 6 characters",
+    "passwords_dont_match": "Passwords do not match",
+    "already_have_account": "Already have an account? Login"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -81,7 +97,8 @@
     "completed_batches": "Completed Batches",
     "refresh": "Refresh",
     "animals": "animals",
-    "mortality_label": "Mortality: {rate}%"
+    "mortality_label": "Mortality: {rate}%",
+    "initial_quantity": "Initial Quantity"
   },
   "batch_detail": {
     "title": "Batch Details",
@@ -384,6 +401,19 @@
     "phone": "Phone",
     "password_required": "Password is required",
     "min_6_chars": "Minimum 6 characters",
-    "refresh": "Refresh"
+    "refresh": "Refresh",
+    "required": "Required field",
+    "invalid_number": "Invalid number"
+  },
+  "errors": {
+    "no_internet": "No internet connection. Check your network.",
+    "server_unreachable": "Unable to reach the server.",
+    "communication_error": "Communication error. Please try again.",
+    "not_found": "Resource not found.",
+    "server_error": "Internal server error. Please try again later.",
+    "session_expired": "Session expired. Please log in again.",
+    "unexpected_response": "The server returned an unexpected response.",
+    "invalid_response": "Invalid server response.",
+    "validation_error": "Validation error. Please check your data."
   }
 }

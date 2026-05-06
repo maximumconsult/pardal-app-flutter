@@ -40,12 +40,12 @@ class ApiService {
       ).timeout(const Duration(seconds: 30));
       return _handleResponse(response);
     } on SocketException {
-      throw ApiException('Sem ligação à internet. Verifique a sua conexão.', 0);
+      throw ApiException('no_internet', 0);
     } on http.ClientException {
-      throw ApiException('Não foi possível contactar o servidor.', 0);
+      throw ApiException('server_unreachable', 0);
     } catch (e) {
       if (e is ApiException) rethrow;
-      throw ApiException('Erro de comunicação: ${e.toString()}', 0);
+      throw ApiException('communication_error', 0);
     }
   }
 
@@ -58,12 +58,12 @@ class ApiService {
       ).timeout(const Duration(seconds: 30));
       return _handleResponse(response);
     } on SocketException {
-      throw ApiException('Sem ligação à internet. Verifique a sua conexão.', 0);
+      throw ApiException('no_internet', 0);
     } on http.ClientException {
-      throw ApiException('Não foi possível contactar o servidor.', 0);
+      throw ApiException('server_unreachable', 0);
     } catch (e) {
       if (e is ApiException) rethrow;
-      throw ApiException('Erro de comunicação: ${e.toString()}', 0);
+      throw ApiException('communication_error', 0);
     }
   }
 
@@ -76,12 +76,12 @@ class ApiService {
       ).timeout(const Duration(seconds: 30));
       return _handleResponse(response);
     } on SocketException {
-      throw ApiException('Sem ligação à internet. Verifique a sua conexão.', 0);
+      throw ApiException('no_internet', 0);
     } on http.ClientException {
-      throw ApiException('Não foi possível contactar o servidor.', 0);
+      throw ApiException('server_unreachable', 0);
     } catch (e) {
       if (e is ApiException) rethrow;
-      throw ApiException('Erro de comunicação: ${e.toString()}', 0);
+      throw ApiException('communication_error', 0);
     }
   }
 
@@ -93,12 +93,12 @@ class ApiService {
       ).timeout(const Duration(seconds: 30));
       return _handleResponse(response);
     } on SocketException {
-      throw ApiException('Sem ligação à internet. Verifique a sua conexão.', 0);
+      throw ApiException('no_internet', 0);
     } on http.ClientException {
-      throw ApiException('Não foi possível contactar o servidor.', 0);
+      throw ApiException('server_unreachable', 0);
     } catch (e) {
       if (e is ApiException) rethrow;
-      throw ApiException('Erro de comunicação: ${e.toString()}', 0);
+      throw ApiException('communication_error', 0);
     }
   }
 
@@ -107,13 +107,13 @@ class ApiService {
     final contentType = response.headers['content-type'] ?? '';
     if (contentType.contains('text/html') || response.body.trimLeft().startsWith('<!')) {
       if (response.statusCode == 404) {
-        throw ApiException('Recurso não encontrado (404).', 404);
+        throw ApiException('not_found', 404);
       } else if (response.statusCode == 500) {
-        throw ApiException('Erro interno do servidor (500). Tente novamente mais tarde.', 500);
+        throw ApiException('server_error', 500);
       } else if (response.statusCode == 302 || response.statusCode == 301) {
-        throw ApiException('Sessão expirada. Faça login novamente.', 401);
+        throw ApiException('session_expired', 401);
       }
-      throw ApiException('O servidor retornou uma resposta inesperada. Verifique o URL da API.', response.statusCode);
+      throw ApiException('unexpected_response', response.statusCode);
     }
 
     // Tentar decodificar JSON
@@ -121,16 +121,16 @@ class ApiService {
     try {
       body = jsonDecode(response.body) as Map<String, dynamic>;
     } catch (e) {
-      throw ApiException('Resposta inválida do servidor.', response.statusCode);
+      throw ApiException('invalid_response', response.statusCode);
     }
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       return body;
     } else if (response.statusCode == 401) {
-      throw ApiException('Sessão expirada. Faça login novamente.', 401);
+      throw ApiException('session_expired', 401);
     } else if (response.statusCode == 422) {
       final errors = body['errors'] as Map<String, dynamic>?;
-      final message = body['message'] as String? ?? 'Erro de validação';
+      final message = body['message'] as String? ?? 'validation_error';
       throw ApiException(
         errors != null
             ? errors.values.expand((v) => v as List).join('\n')
@@ -139,7 +139,7 @@ class ApiService {
       );
     } else {
       throw ApiException(
-        body['message'] as String? ?? 'Erro no servidor (${response.statusCode})',
+        body['message'] as String? ?? 'server_error',
         response.statusCode,
       );
     }

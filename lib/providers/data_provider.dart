@@ -69,7 +69,7 @@ class DataProvider extends ChangeNotifier {
     notifyListeners();
     try {
       final response = await _api.get('/batches/$batchId');
-      _batchDetail = response;
+      _batchDetail = response['batch'] as Map<String, dynamic>? ?? response;
       _isLoading = false;
       notifyListeners();
     } catch (e) {
@@ -112,6 +112,24 @@ class DataProvider extends ChangeNotifier {
     } catch (e) {
       _error = e.toString();
       notifyListeners();
+    }
+  }
+
+  // Criar lote
+  Future<bool> storeBatch(Map<String, dynamic> data) async {
+    _isLoading = true;
+    _error = null;
+    notifyListeners();
+    try {
+      await _api.post('/batches', data);
+      _isLoading = false;
+      notifyListeners();
+      return true;
+    } catch (e) {
+      _error = e.toString();
+      _isLoading = false;
+      notifyListeners();
+      return false;
     }
   }
 
@@ -191,7 +209,7 @@ class DataProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
     try {
-      final response = await _api.get('/workers');
+      final response = await _api.get('/auth/workers');
       _workers = response['workers'] as List<dynamic>? ?? [];
       _isLoading = false;
       notifyListeners();
@@ -207,7 +225,7 @@ class DataProvider extends ChangeNotifier {
     _error = null;
     notifyListeners();
     try {
-      await _api.post('/workers', data);
+      await _api.post('/auth/workers', data);
       await loadWorkers();
       _isLoading = false;
       notifyListeners();
