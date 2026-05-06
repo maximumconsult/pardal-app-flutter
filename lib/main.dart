@@ -4,10 +4,12 @@ import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
 import 'providers/data_provider.dart';
 import 'providers/localization_provider.dart';
+import 'providers/subscription_provider.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/register_screen.dart';
 import 'screens/auth/forgot_password_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/subscription/plans_screen.dart';
 import 'utils/constants.dart';
 
 void main() {
@@ -30,6 +32,7 @@ class PardalApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AuthProvider()),
         ChangeNotifierProvider(create: (_) => DataProvider()),
         ChangeNotifierProvider(create: (_) => LocalizationProvider()),
+        ChangeNotifierProvider(create: (_) => SubscriptionProvider()),
       ],
       child: MaterialApp(
         title: 'Pardal',
@@ -55,6 +58,7 @@ class PardalApp extends StatelessWidget {
           '/register': (_) => const RegisterScreen(),
           '/forgot-password': (_) => const ForgotPasswordScreen(),
           '/home': (_) => const HomeScreen(),
+          '/plans': (_) => const PlansScreen(),
         },
       ),
     );

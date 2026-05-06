@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/localization_provider.dart';
 import '../../utils/constants.dart';
+import '../subscription/subscription_card.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -167,6 +168,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
               ),
+              const SizedBox(height: 16),
+
+              // Subscrição
+              const SubscriptionCard(),
               const SizedBox(height: 16),
 
               // Editar dados pessoais
@@ -383,7 +388,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               // Versão
               Center(
-                child: Text('Pardal v1.2.1', style: TextStyle(fontSize: 12, color: Colors.grey[400])),
+                child: Text('Pardal v1.3.0', style: TextStyle(fontSize: 12, color: Colors.grey[400])),
               ),
             ],
           );
