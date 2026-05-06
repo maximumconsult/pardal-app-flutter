@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/data_provider.dart';
-import '../../utils/constants.dart';
 import '../../providers/localization_provider.dart';
+import '../../utils/constants.dart';
 
 class MortalitiesScreen extends StatefulWidget {
   const MortalitiesScreen({super.key});
@@ -22,15 +22,16 @@ class _MortalitiesScreenState extends State<MortalitiesScreen> {
   }
 
   void _confirmDelete(BuildContext context, int mortalityId) {
+    final loc = context.read<LocalizationProvider>();
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Eliminar Registo'),
-        content: const Text('Tem a certeza que deseja eliminar este registo de mortalidade? Esta acção irá restaurar a quantidade de animais no lote.'),
+        title: Text(loc.translate('mortalities.delete_title')),
+        content: Text(loc.translate('mortalities.confirm_delete')),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: const Text('Cancelar'),
+            child: Text(loc.translate('common.cancel')),
           ),
           TextButton(
             onPressed: () async {
@@ -38,16 +39,16 @@ class _MortalitiesScreenState extends State<MortalitiesScreen> {
               final success = await context.read<DataProvider>().deleteMortality(mortalityId);
               if (success && mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Registo eliminado com sucesso'), backgroundColor: AppConstants.primaryColor),
+                  SnackBar(content: Text(loc.translate('mortalities.delete_success')), backgroundColor: AppConstants.primaryColor),
                 );
                 context.read<DataProvider>().loadMortalities();
               } else if (mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(context.read<DataProvider>().error ?? 'Erro ao eliminar'), backgroundColor: AppConstants.errorColor),
+                  SnackBar(content: Text(context.read<DataProvider>().error ?? loc.translate('mortalities.delete_error')), backgroundColor: AppConstants.errorColor),
                 );
               }
             },
-            child: const Text('Eliminar', style: TextStyle(color: Colors.red)),
+            child: Text(loc.translate('mortalities.delete_btn'), style: const TextStyle(color: Colors.red)),
           ),
         ],
       ),
@@ -56,6 +57,7 @@ class _MortalitiesScreenState extends State<MortalitiesScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.watch<LocalizationProvider>();
     final auth = context.watch<AuthProvider>();
     final isAdminOrManager = auth.userRole == 'admin' || auth.userRole == 'manager';
 
@@ -65,12 +67,11 @@ class _MortalitiesScreenState extends State<MortalitiesScreen> {
         backgroundColor: AppConstants.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
-        title: Consumer<LocalizationProvider>(
-          builder: (_, localization, __) => Text(localization.translate('common.mortality')),
-        ),
+        title: Text(loc.translate('mortalities.title')),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
+            tooltip: loc.translate('common.refresh'),
             onPressed: () => context.read<DataProvider>().loadMortalities(),
           ),
         ],
@@ -87,11 +88,11 @@ class _MortalitiesScreenState extends State<MortalitiesScreen> {
                 children: [
                   Icon(Icons.pets_outlined, size: 64, color: Colors.grey[300]),
                   const SizedBox(height: 16),
-                  Text('Nenhum registo de mortalidade', style: TextStyle(color: Colors.grey[500], fontSize: 16)),
+                  Text(loc.translate('mortalities.no_records'), style: TextStyle(color: Colors.grey[500], fontSize: 16)),
                   const SizedBox(height: 8),
                   TextButton(
                     onPressed: () => data.loadMortalities(),
-                    child: const Text('Actualizar'),
+                    child: Text(loc.translate('common.refresh')),
                   ),
                 ],
               ),
@@ -111,7 +112,7 @@ class _MortalitiesScreenState extends State<MortalitiesScreen> {
                   children: [
                     Expanded(
                       child: _SummaryCard(
-                        title: 'Total Registos',
+                        title: loc.translate('mortalities.total_records'),
                         value: '${summary?['total_records'] ?? data.mortalities.length}',
                         icon: Icons.assignment,
                         color: AppConstants.primaryColor,
@@ -120,7 +121,7 @@ class _MortalitiesScreenState extends State<MortalitiesScreen> {
                     const SizedBox(width: 12),
                     Expanded(
                       child: _SummaryCard(
-                        title: 'Total Mortes',
+                        title: loc.translate('mortalities.total_deaths'),
                         value: '${summary?['total_deaths'] ?? 0}',
                         icon: Icons.pets,
                         color: AppConstants.errorColor,
@@ -130,7 +131,7 @@ class _MortalitiesScreenState extends State<MortalitiesScreen> {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'Histórico de Mortalidades',
+                  loc.translate('mortalities.history'),
                   style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppConstants.primaryDark),
                 ),
                 const SizedBox(height: 12),
@@ -199,11 +200,12 @@ class _MortalityCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.watch<LocalizationProvider>();
     final batch = mortality['batch'] as Map<String, dynamic>?;
     final reporter = mortality['reporter'] as Map<String, dynamic>?;
     final date = mortality['date'] ?? '';
     final quantity = mortality['quantity'] ?? 0;
-    final cause = mortality['cause'] ?? 'Sem causa registada';
+    final cause = mortality['cause'];
     final createdAt = mortality['created_at'] ?? '';
 
     return Container(
@@ -228,7 +230,7 @@ class _MortalityCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
-                  '$quantity mortes',
+                  '$quantity ${loc.translate('mortalities.deaths')}',
                   style: const TextStyle(
                     color: AppConstants.errorColor,
                     fontWeight: FontWeight.w600,
@@ -239,7 +241,7 @@ class _MortalityCard extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  batch?['name'] ?? 'Lote desconhecido',
+                  batch?['name'] ?? loc.translate('mortalities.unknown_batch'),
                   style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -260,7 +262,9 @@ class _MortalityCard extends StatelessWidget {
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
-                  'Causa: $cause',
+                  cause != null && cause.toString().isNotEmpty
+                      ? loc.translateWithParams('mortalities.cause_label', {'cause': cause.toString()})
+                      : loc.translate('mortalities.no_cause'),
                   style: TextStyle(fontSize: 13, color: Colors.grey[700]),
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
@@ -274,14 +278,14 @@ class _MortalityCard extends StatelessWidget {
               Icon(Icons.calendar_today, size: 12, color: Colors.grey[400]),
               const SizedBox(width: 4),
               Text(
-                'Data: $date',
+                loc.translateWithParams('mortalities.date_value', {'date': date}),
                 style: TextStyle(fontSize: 12, color: Colors.grey[500]),
               ),
               const SizedBox(width: 16),
               Icon(Icons.person_outline, size: 12, color: Colors.grey[400]),
               const SizedBox(width: 4),
               Text(
-                reporter?['name'] ?? 'Desconhecido',
+                reporter?['name'] ?? loc.translate('mortalities.unknown_reporter'),
                 style: TextStyle(fontSize: 12, color: Colors.grey[500]),
               ),
             ],
@@ -293,7 +297,7 @@ class _MortalityCard extends StatelessWidget {
                 Icon(Icons.access_time, size: 12, color: Colors.grey[400]),
                 const SizedBox(width: 4),
                 Text(
-                  'Registado: $createdAt',
+                  loc.translateWithParams('mortalities.registered_at', {'date': createdAt}),
                   style: TextStyle(fontSize: 11, color: Colors.grey[400]),
                 ),
               ],

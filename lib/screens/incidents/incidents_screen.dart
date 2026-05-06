@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/data_provider.dart';
+import '../../providers/localization_provider.dart';
 import '../../utils/constants.dart';
 import 'add_incident_screen.dart';
 
@@ -22,16 +23,19 @@ class _IncidentsScreenState extends State<IncidentsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.watch<LocalizationProvider>();
+
     return Scaffold(
       backgroundColor: AppConstants.backgroundColor,
       appBar: AppBar(
         backgroundColor: AppConstants.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
-        title: const Text('Ocorrências'),
+        title: Text(loc.translate('incidents.title')),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
+            tooltip: loc.translate('common.refresh'),
             onPressed: () => context.read<DataProvider>().loadIncidents(),
           ),
         ],
@@ -61,11 +65,11 @@ class _IncidentsScreenState extends State<IncidentsScreen> {
                 children: [
                   Icon(Icons.check_circle_outline, size: 64, color: Colors.grey[300]),
                   const SizedBox(height: 16),
-                  Text('Nenhuma ocorrência', style: TextStyle(color: Colors.grey[500], fontSize: 16)),
+                  Text(loc.translate('incidents.no_incidents'), style: TextStyle(color: Colors.grey[500], fontSize: 16)),
                   const SizedBox(height: 8),
                   TextButton(
                     onPressed: () => data.loadIncidents(),
-                    child: const Text('Actualizar'),
+                    child: Text(loc.translate('common.refresh')),
                   ),
                 ],
               ),
@@ -83,19 +87,19 @@ class _IncidentsScreenState extends State<IncidentsScreen> {
               padding: const EdgeInsets.all(16),
               children: [
                 if (pending.isNotEmpty) ...[
-                  _SectionTitle(title: 'Pendentes', count: pending.length, color: AppConstants.warningColor),
+                  _SectionTitle(title: loc.translate('incidents.pending'), count: pending.length, color: AppConstants.warningColor),
                   const SizedBox(height: 8),
                   ...pending.map((i) => _IncidentCard(incident: i, incidentTypes: data.incidentTypes)),
                 ],
                 if (inProgress.isNotEmpty) ...[
                   const SizedBox(height: 20),
-                  _SectionTitle(title: 'Em Progresso', count: inProgress.length, color: Colors.blue),
+                  _SectionTitle(title: loc.translate('incidents.in_progress'), count: inProgress.length, color: Colors.blue),
                   const SizedBox(height: 8),
                   ...inProgress.map((i) => _IncidentCard(incident: i, incidentTypes: data.incidentTypes)),
                 ],
                 if (resolved.isNotEmpty) ...[
                   const SizedBox(height: 20),
-                  _SectionTitle(title: 'Resolvidas', count: resolved.length, color: AppConstants.accentColor),
+                  _SectionTitle(title: loc.translate('incidents.resolved'), count: resolved.length, color: AppConstants.accentColor),
                   const SizedBox(height: 8),
                   ...resolved.map((i) => _IncidentCard(incident: i, incidentTypes: data.incidentTypes)),
                 ],
@@ -137,7 +141,6 @@ class _IncidentCard extends StatelessWidget {
   final List<dynamic> incidentTypes;
   const _IncidentCard({required this.incident, required this.incidentTypes});
 
-  // Extrair título (primeira linha) e detalhes (resto) da descrição
   String _getTitle(String description) {
     final lines = description.split('\n');
     final firstLine = lines.first.trim();
@@ -152,26 +155,21 @@ class _IncidentCard extends StatelessWidget {
     return '';
   }
 
-  String _translateType(String type) {
+  String _translateType(BuildContext context, String type) {
+    final loc = context.read<LocalizationProvider>();
     // Procurar o nome traduzido nos tipos carregados da API
     for (final t in incidentTypes) {
       if (t['slug'] == type) return t['name'] as String;
     }
-    // Fallback
-    switch (type) {
-      case 'equipment': return 'Equipamento';
-      case 'water': return 'Água';
-      case 'electricity': return 'Electricidade';
-      case 'disease': return 'Doença';
-      case 'predator': return 'Predador';
-      case 'weather': return 'Clima';
-      case 'other': return 'Outro';
-      default: return type;
-    }
+    // Fallback via i18n
+    final translated = loc.translate('incidents.incident_types.$type');
+    if (translated != 'incidents.incident_types.$type') return translated;
+    return type;
   }
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.watch<LocalizationProvider>();
     final urgency = incident['urgency'] ?? 'normal';
     final status = incident['status'] ?? 'pending';
     final batch = incident['batch'] as Map<String, dynamic>?;
@@ -202,7 +200,7 @@ class _IncidentCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
-                  AppConstants.urgencyLabel(urgency),
+                  loc.translateUrgency(urgency),
                   style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: AppConstants.urgencyColor(urgency)),
                 ),
               ),
@@ -214,7 +212,7 @@ class _IncidentCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
-                  _translateType(incident['type'] ?? ''),
+                  _translateType(context, incident['type'] ?? ''),
                   style: TextStyle(fontSize: 11, color: Colors.grey[700]),
                 ),
               ),
@@ -230,7 +228,7 @@ class _IncidentCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
-                  AppConstants.statusLabel(status),
+                  loc.translateStatus(status),
                   style: TextStyle(
                     fontSize: 11,
                     fontWeight: FontWeight.w600,

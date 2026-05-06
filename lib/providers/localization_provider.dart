@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../services/localization_service.dart';
 
@@ -8,6 +7,7 @@ class LocalizationProvider extends ChangeNotifier {
   late String _currentLanguage;
 
   String get currentLanguage => _currentLanguage;
+  String get currentLocale => _currentLanguage;
 
   LocalizationProvider() {
     _currentLanguage = 'pt';
@@ -29,8 +29,43 @@ class LocalizationProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// Alias para setLanguage, usado no profile_screen
+  Future<void> setLocale(String languageCode) async {
+    return setLanguage(languageCode);
+  }
+
   String translate(String key) {
     return _localizationService.translate(key);
+  }
+
+  /// Traduz uma chave com parâmetros dinâmicos
+  /// Ex: translateWithParams('dashboard.urgent_count', {'count': '3'})
+  String translateWithParams(String key, Map<String, String> params) {
+    return _localizationService.translateWithParams(key, params);
+  }
+
+  /// Traduz o role do utilizador (admin, manager, worker)
+  String translateRole(String role) {
+    switch (role) {
+      case 'admin':
+        return translate('roles.admin');
+      case 'manager':
+        return translate('roles.manager');
+      case 'worker':
+        return translate('roles.worker');
+      default:
+        return role;
+    }
+  }
+
+  /// Traduz status (active, completed, pending, etc.)
+  String translateStatus(String status) {
+    return _localizationService.translate('status.$status');
+  }
+
+  /// Traduz urgência (urgent, important, normal)
+  String translateUrgency(String urgency) {
+    return _localizationService.translate('urgency.$urgency');
   }
 
   List<String> getSupportedLanguages() {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/data_provider.dart';
+import '../../providers/localization_provider.dart';
 import '../../utils/constants.dart';
 
 class AddIncidentScreen extends StatefulWidget {
@@ -18,12 +19,6 @@ class _AddIncidentScreenState extends State<AddIncidentScreen> {
   String? _type;
   String _urgency = 'normal';
 
-  final _urgencies = [
-    {'value': 'normal', 'label': 'Normal', 'color': AppConstants.accentColor},
-    {'value': 'important', 'label': 'Importante', 'color': AppConstants.warningColor},
-    {'value': 'urgent', 'label': 'Urgente', 'color': AppConstants.errorColor},
-  ];
-
   @override
   void initState() {
     super.initState();
@@ -40,10 +35,11 @@ class _AddIncidentScreenState extends State<AddIncidentScreen> {
   }
 
   Future<void> _submit() async {
+    final loc = context.read<LocalizationProvider>();
     if (!_formKey.currentState!.validate()) return;
     if (_type == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Seleccione o tipo de ocorrência'), backgroundColor: AppConstants.errorColor),
+        SnackBar(content: Text(loc.translate('incidents.incident_type_required')), backgroundColor: AppConstants.errorColor),
       );
       return;
     }
@@ -59,7 +55,7 @@ class _AddIncidentScreenState extends State<AddIncidentScreen> {
     final success = await data.storeIncident(body);
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ocorrência reportada com sucesso!'), backgroundColor: AppConstants.successColor),
+        SnackBar(content: Text(loc.translate('incidents.success_message')), backgroundColor: AppConstants.successColor),
       );
       Navigator.of(context).pop(true);
     } else if (mounted && data.error != null) {
@@ -71,13 +67,15 @@ class _AddIncidentScreenState extends State<AddIncidentScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.watch<LocalizationProvider>();
+
     return Scaffold(
       backgroundColor: AppConstants.backgroundColor,
       appBar: AppBar(
         backgroundColor: AppConstants.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
-        title: const Text('Nova Ocorrência'),
+        title: Text(loc.translate('incidents.add_incident')),
       ),
       body: Consumer<DataProvider>(
         builder: (_, data, __) {
@@ -92,42 +90,39 @@ class _AddIncidentScreenState extends State<AddIncidentScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Urgência
-                  const Text('Urgência', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text(loc.translate('incidents.urgency'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 8),
                   Row(
-                    children: _urgencies.map((u) {
-                      final isSelected = _urgency == u['value'];
-                      final color = u['color'] as Color;
-                      return Expanded(
-                        child: GestureDetector(
-                          onTap: () => setState(() => _urgency = u['value'] as String),
-                          child: Container(
-                            margin: EdgeInsets.only(right: u != _urgencies.last ? 8 : 0),
-                            padding: const EdgeInsets.symmetric(vertical: 12),
-                            decoration: BoxDecoration(
-                              color: isSelected ? color.withOpacity(0.15) : Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: isSelected ? color : Colors.grey.shade300, width: isSelected ? 2 : 1),
-                            ),
-                            child: Center(
-                              child: Text(
-                                u['label'] as String,
-                                style: TextStyle(
-                                  fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
-                                  color: isSelected ? color : Colors.grey[600],
-                                  fontSize: 13,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      );
-                    }).toList(),
+                    children: [
+                      _UrgencyButton(
+                        label: loc.translate('incidents.normal'),
+                        value: 'normal',
+                        color: AppConstants.accentColor,
+                        isSelected: _urgency == 'normal',
+                        onTap: () => setState(() => _urgency = 'normal'),
+                      ),
+                      const SizedBox(width: 8),
+                      _UrgencyButton(
+                        label: loc.translate('incidents.important'),
+                        value: 'important',
+                        color: AppConstants.warningColor,
+                        isSelected: _urgency == 'important',
+                        onTap: () => setState(() => _urgency = 'important'),
+                      ),
+                      const SizedBox(width: 8),
+                      _UrgencyButton(
+                        label: loc.translate('incidents.urgent'),
+                        value: 'urgent',
+                        color: AppConstants.errorColor,
+                        isSelected: _urgency == 'urgent',
+                        onTap: () => setState(() => _urgency = 'urgent'),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 20),
 
                   // Tipo (dinâmico da API)
-                  const Text('Tipo de Ocorrência *', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text('${loc.translate('incidents.incident_type')} *', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 6),
                   Container(
                     width: double.infinity,
@@ -141,7 +136,7 @@ class _AddIncidentScreenState extends State<AddIncidentScreen> {
                       child: DropdownButton<String>(
                         value: _type,
                         isExpanded: true,
-                        hint: const Text('Seleccione o tipo'),
+                        hint: Text(loc.translate('incidents.select_type')),
                         items: incidentTypes.map<DropdownMenuItem<String>>((t) {
                           return DropdownMenuItem<String>(
                             value: t['slug'] as String,
@@ -155,7 +150,7 @@ class _AddIncidentScreenState extends State<AddIncidentScreen> {
                   const SizedBox(height: 20),
 
                   // Lote associado
-                  const Text('Lote Associado (opcional)', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text(loc.translate('incidents.associated_batch'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 6),
                   Container(
                     width: double.infinity,
@@ -169,9 +164,9 @@ class _AddIncidentScreenState extends State<AddIncidentScreen> {
                       child: DropdownButton<int?>(
                         value: _batchId,
                         isExpanded: true,
-                        hint: const Text('Nenhum lote'),
+                        hint: Text(loc.translate('incidents.no_batch')),
                         items: [
-                          const DropdownMenuItem<int?>(value: null, child: Text('Nenhum lote')),
+                          DropdownMenuItem<int?>(value: null, child: Text(loc.translate('incidents.no_batch'))),
                           ...activeBatches.map((b) {
                             final species = b['species'] as Map<String, dynamic>?;
                             final emoji = species != null ? AppConstants.speciesEmoji(species['icon'] ?? '') : '🐾';
@@ -188,25 +183,25 @@ class _AddIncidentScreenState extends State<AddIncidentScreen> {
                   const SizedBox(height: 20),
 
                   // Título
-                  const Text('Título *', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text(loc.translate('incidents.title_label'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 6),
                   TextFormField(
                     controller: _titleCtrl,
-                    decoration: _inputDecoration('Descreva brevemente a ocorrência'),
+                    decoration: _inputDecoration(loc.translate('incidents.title_hint')),
                     validator: (v) {
-                      if (v == null || v.isEmpty) return 'Título é obrigatório';
+                      if (v == null || v.isEmpty) return loc.translate('incidents.title_required');
                       return null;
                     },
                   ),
                   const SizedBox(height: 20),
 
                   // Descrição
-                  const Text('Descrição', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text(loc.translate('incidents.description_label'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 6),
                   TextFormField(
                     controller: _descCtrl,
                     maxLines: 4,
-                    decoration: _inputDecoration('Detalhes adicionais sobre a ocorrência...'),
+                    decoration: _inputDecoration(loc.translate('incidents.incident_description')),
                   ),
                   const SizedBox(height: 28),
 
@@ -224,7 +219,7 @@ class _AddIncidentScreenState extends State<AddIncidentScreen> {
                       ),
                       child: data.isLoading
                           ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                          : const Text('Reportar Ocorrência', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                          : Text(loc.translate('incidents.report_incident'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                     ),
                   ),
                 ],
@@ -245,6 +240,49 @@ class _AddIncidentScreenState extends State<AddIncidentScreen> {
       border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey.shade300)),
       enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey.shade300)),
       focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppConstants.primaryColor, width: 2)),
+    );
+  }
+}
+
+class _UrgencyButton extends StatelessWidget {
+  final String label;
+  final String value;
+  final Color color;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _UrgencyButton({
+    required this.label,
+    required this.value,
+    required this.color,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: isSelected ? color.withOpacity(0.15) : Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: isSelected ? color : Colors.grey.shade300, width: isSelected ? 2 : 1),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: TextStyle(
+                fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                color: isSelected ? color : Colors.grey[600],
+                fontSize: 13,
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 }

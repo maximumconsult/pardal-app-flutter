@@ -51,47 +51,12 @@ class AppConstants {
     }
   }
 
-  // Tradução de tipos de produção
-  static String productionType(String type) {
-    switch (type) {
-      case 'meat': return 'Carne';
-      case 'egg': return 'Ovos';
-      case 'fish': return 'Peixe';
-      case 'dairy': return 'Lacticínios';
-      default: return 'Outro';
-    }
-  }
-
-  // Tradução de urgência
-  static String urgencyLabel(String urgency) {
-    switch (urgency) {
-      case 'urgent': return 'Urgente';
-      case 'important': return 'Importante';
-      case 'normal': return 'Normal';
-      default: return urgency;
-    }
-  }
-
   static Color urgencyColor(String urgency) {
     switch (urgency) {
       case 'urgent': return errorColor;
       case 'important': return warningColor;
       case 'normal': return accentColor;
       default: return Colors.grey;
-    }
-  }
-
-  // Tradução de status
-  static String statusLabel(String status) {
-    switch (status) {
-      case 'active': return 'Activo';
-      case 'completed': return 'Concluído';
-      case 'pending': return 'Pendente';
-      case 'approved': return 'Aprovado';
-      case 'rejected': return 'Rejeitado';
-      case 'in_progress': return 'Em progresso';
-      case 'resolved': return 'Resolvida';
-      default: return status;
     }
   }
 }

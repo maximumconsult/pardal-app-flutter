@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
+import '../../providers/localization_provider.dart';
 import '../../utils/constants.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -38,12 +39,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _saveProfile() async {
+    final loc = context.read<LocalizationProvider>();
     final auth = context.read<AuthProvider>();
     final success = await auth.updateProfile(_nameCtrl.text, _phoneCtrl.text);
     if (success && mounted) {
       setState(() => _editingProfile = false);
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Perfil actualizado!'), backgroundColor: AppConstants.successColor),
+        SnackBar(content: Text(loc.translate('profile.profile_updated')), backgroundColor: AppConstants.successColor),
       );
     } else if (mounted && auth.error != null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -53,15 +55,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _savePassword() async {
+    final loc = context.read<LocalizationProvider>();
     if (_newPassCtrl.text != _confirmPassCtrl.text) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('As palavras-passe não coincidem'), backgroundColor: AppConstants.errorColor),
+        SnackBar(content: Text(loc.translate('profile.passwords_mismatch')), backgroundColor: AppConstants.errorColor),
       );
       return;
     }
     if (_newPassCtrl.text.length < 6) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('A palavra-passe deve ter pelo menos 6 caracteres'), backgroundColor: AppConstants.errorColor),
+        SnackBar(content: Text(loc.translate('profile.password_min_length')), backgroundColor: AppConstants.errorColor),
       );
       return;
     }
@@ -79,7 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _confirmPassCtrl.clear();
       });
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Palavra-passe alterada!'), backgroundColor: AppConstants.successColor),
+        SnackBar(content: Text(loc.translate('profile.password_changed')), backgroundColor: AppConstants.successColor),
       );
     } else if (mounted && auth.error != null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -89,16 +92,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> _logout() async {
+    final loc = context.read<LocalizationProvider>();
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: const Text('Sair'),
-        content: const Text('Tem a certeza que deseja sair?'),
+        title: Text(loc.translate('profile.logout')),
+        content: Text(loc.translate('profile.logout_confirm')),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancelar')),
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: Text(loc.translate('common.cancel'))),
           TextButton(
             onPressed: () => Navigator.pop(ctx, true),
-            child: const Text('Sair', style: TextStyle(color: AppConstants.errorColor)),
+            child: Text(loc.translate('profile.logout'), style: const TextStyle(color: AppConstants.errorColor)),
           ),
         ],
       ),
@@ -111,13 +115,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.watch<LocalizationProvider>();
+
     return Scaffold(
       backgroundColor: AppConstants.backgroundColor,
       appBar: AppBar(
         backgroundColor: AppConstants.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
-        title: const Text('Meu Perfil'),
+        title: Text(loc.translate('profile.title')),
       ),
       body: Consumer<AuthProvider>(
         builder: (_, auth, __) {
@@ -154,7 +160,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(
-                        auth.userRole == 'admin' ? 'Administrador' : auth.userRole == 'manager' ? 'Gestor' : 'Colaborador',
+                        loc.translateRole(auth.userRole),
                         style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppConstants.primaryColor),
                       ),
                     ),
@@ -178,10 +184,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         const Icon(Icons.person_outline, color: AppConstants.primaryColor),
                         const SizedBox(width: 8),
-                        const Expanded(child: Text('Dados Pessoais', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
+                        Expanded(child: Text(loc.translate('profile.personal_data'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
                         TextButton(
                           onPressed: () => setState(() => _editingProfile = !_editingProfile),
-                          child: Text(_editingProfile ? 'Cancelar' : 'Editar'),
+                          child: Text(_editingProfile ? loc.translate('common.cancel') : loc.translate('common.edit')),
                         ),
                       ],
                     ),
@@ -189,13 +195,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       const SizedBox(height: 12),
                       TextField(
                         controller: _nameCtrl,
-                        decoration: _inputDecoration('Nome'),
+                        decoration: _inputDecoration(loc.translate('profile.name')),
                       ),
                       const SizedBox(height: 12),
                       TextField(
                         controller: _phoneCtrl,
                         keyboardType: TextInputType.phone,
-                        decoration: _inputDecoration('Telefone'),
+                        decoration: _inputDecoration(loc.translate('profile.phone')),
                       ),
                       const SizedBox(height: 16),
                       SizedBox(
@@ -209,7 +215,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           child: auth.isLoading
                               ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                              : const Text('Guardar'),
+                              : Text(loc.translate('common.save')),
                         ),
                       ),
                     ],
@@ -233,10 +239,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         const Icon(Icons.lock_outline, color: AppConstants.primaryColor),
                         const SizedBox(width: 8),
-                        const Expanded(child: Text('Alterar Palavra-passe', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
+                        Expanded(child: Text(loc.translate('profile.change_password'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
                         TextButton(
                           onPressed: () => setState(() => _editingPassword = !_editingPassword),
-                          child: Text(_editingPassword ? 'Cancelar' : 'Alterar'),
+                          child: Text(_editingPassword ? loc.translate('common.cancel') : loc.translate('profile.change')),
                         ),
                       ],
                     ),
@@ -245,19 +251,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       TextField(
                         controller: _currentPassCtrl,
                         obscureText: true,
-                        decoration: _inputDecoration('Palavra-passe actual'),
+                        decoration: _inputDecoration(loc.translate('profile.current_password')),
                       ),
                       const SizedBox(height: 12),
                       TextField(
                         controller: _newPassCtrl,
                         obscureText: true,
-                        decoration: _inputDecoration('Nova palavra-passe'),
+                        decoration: _inputDecoration(loc.translate('profile.new_password')),
                       ),
                       const SizedBox(height: 12),
                       TextField(
                         controller: _confirmPassCtrl,
                         obscureText: true,
-                        decoration: _inputDecoration('Confirmar nova palavra-passe'),
+                        decoration: _inputDecoration(loc.translate('profile.confirm_password')),
                       ),
                       const SizedBox(height: 16),
                       SizedBox(
@@ -271,10 +277,89 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           child: auth.isLoading
                               ? const SizedBox(width: 20, height: 20, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                              : const Text('Guardar Palavra-passe'),
+                              : Text(loc.translate('profile.save_password')),
                         ),
                       ),
                     ],
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Idioma
+              Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 8, offset: const Offset(0, 2))],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        const Icon(Icons.language, color: AppConstants.primaryColor),
+                        const SizedBox(width: 8),
+                        Expanded(child: Text(loc.translate('profile.language'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold))),
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => loc.setLocale('pt'),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              decoration: BoxDecoration(
+                                color: loc.currentLocale == 'pt' ? AppConstants.primaryColor.withOpacity(0.1) : Colors.grey[100],
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: loc.currentLocale == 'pt' ? AppConstants.primaryColor : Colors.grey.shade300,
+                                  width: loc.currentLocale == 'pt' ? 2 : 1,
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'Português',
+                                  style: TextStyle(
+                                    fontWeight: loc.currentLocale == 'pt' ? FontWeight.w700 : FontWeight.w500,
+                                    color: loc.currentLocale == 'pt' ? AppConstants.primaryColor : Colors.grey[600],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => loc.setLocale('en'),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              decoration: BoxDecoration(
+                                color: loc.currentLocale == 'en' ? AppConstants.primaryColor.withOpacity(0.1) : Colors.grey[100],
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: loc.currentLocale == 'en' ? AppConstants.primaryColor : Colors.grey.shade300,
+                                  width: loc.currentLocale == 'en' ? 2 : 1,
+                                ),
+                              ),
+                              child: Center(
+                                child: Text(
+                                  'English',
+                                  style: TextStyle(
+                                    fontWeight: loc.currentLocale == 'en' ? FontWeight.w700 : FontWeight.w500,
+                                    color: loc.currentLocale == 'en' ? AppConstants.primaryColor : Colors.grey[600],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -287,7 +372,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: OutlinedButton.icon(
                   onPressed: _logout,
                   icon: const Icon(Icons.logout, color: AppConstants.errorColor),
-                  label: const Text('Sair', style: TextStyle(color: AppConstants.errorColor, fontWeight: FontWeight.w600)),
+                  label: Text(loc.translate('profile.logout'), style: const TextStyle(color: AppConstants.errorColor, fontWeight: FontWeight.w600)),
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: AppConstants.errorColor),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -298,7 +383,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
               // Versão
               Center(
-                child: Text('Pardal v1.0.0', style: TextStyle(fontSize: 12, color: Colors.grey[400])),
+                child: Text('Pardal v1.2.1', style: TextStyle(fontSize: 12, color: Colors.grey[400])),
               ),
             ],
           );

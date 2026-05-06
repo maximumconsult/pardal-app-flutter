@@ -12,25 +12,22 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final _emailCtrl = TextEditingController();
+  final _passCtrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
   bool _obscurePassword = true;
 
   @override
   void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
+    _emailCtrl.dispose();
+    _passCtrl.dispose();
     super.dispose();
   }
 
   Future<void> _login() async {
     if (!_formKey.currentState!.validate()) return;
     final auth = context.read<AuthProvider>();
-    final success = await auth.login(
-      _emailController.text.trim(),
-      _passwordController.text,
-    );
+    final success = await auth.login(_emailCtrl.text.trim(), _passCtrl.text);
     if (success && mounted) {
       Navigator.of(context).pushReplacementNamed('/home');
     }
@@ -38,6 +35,8 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.watch<LocalizationProvider>();
+
     return Scaffold(
       body: Container(
         width: double.infinity,
@@ -49,7 +48,7 @@ class _LoginScreenState extends State<LoginScreen> {
             colors: [
               Color(0xFF1B4332),
               Color(0xFF2D6A4F),
-              Color(0xFF52B788),
+              Color(0xFF40916C),
             ],
           ),
         ),
@@ -57,99 +56,40 @@ class _LoginScreenState extends State<LoginScreen> {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                // Parte superior: Logo + PARDAL + slogan
                 const SizedBox(height: 40),
+                // Logo
                 Image.asset(
                   'assets/images/logo_icon.png',
-                  width: 120,
-                  height: 120,
+                  width: 100,
+                  height: 100,
                 ),
                 const SizedBox(height: 12),
                 const Text(
                   'PARDAL',
                   style: TextStyle(
-                    fontSize: 36,
+                    fontSize: 28,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
-                    letterSpacing: 6,
+                    letterSpacing: 4,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'controle a sua criação, proteja o seu lucro',
-                  style: TextStyle(
-                    fontSize: 13,
-                    color: Colors.white.withOpacity(0.8),
-                  ),
+                  loc.translate('app_slogan'),
+                  style: TextStyle(fontSize: 13, color: Colors.white.withOpacity(0.8)),
                 ),
                 const SizedBox(height: 32),
 
-                // Seletor de Idioma
-                Consumer<LocalizationProvider>(
-                  builder: (_, locProvider, __) => Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 24),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () => locProvider.setLanguage('pt'),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: locProvider.currentLanguage == 'pt' ? Colors.white : Colors.transparent,
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 2,
-                              ),
-                            ),
-                            child: Text(
-                              'Português',
-                              style: TextStyle(
-                                color: locProvider.currentLanguage == 'pt' ? const Color(0xFF1B4332) : Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        GestureDetector(
-                          onTap: () => locProvider.setLanguage('en'),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                            decoration: BoxDecoration(
-                              color: locProvider.currentLanguage == 'en' ? Colors.white : Colors.transparent,
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(
-                                color: Colors.white,
-                                width: 2,
-                              ),
-                            ),
-                            child: Text(
-                              'English',
-                              style: TextStyle(
-                                color: locProvider.currentLanguage == 'en' ? const Color(0xFF1B4332) : Colors.white,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 32),
-
-                // Formulário com fundo branco arredondado
+                // Form card
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 24),
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+                  padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                    borderRadius: BorderRadius.circular(24),
+                    borderRadius: BorderRadius.circular(20),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withOpacity(0.1),
+                        color: Colors.black.withOpacity(0.15),
                         blurRadius: 20,
                         offset: const Offset(0, 10),
                       ),
@@ -158,82 +98,54 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Form(
                     key: _formKey,
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         // Email
+                        Text(loc.translate('auth.email'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                        const SizedBox(height: 6),
                         TextFormField(
-                          controller: _emailController,
+                          controller: _emailCtrl,
                           keyboardType: TextInputType.emailAddress,
-                          style: const TextStyle(color: Color(0xFF1B4332)),
                           decoration: InputDecoration(
-                            labelText: 'Email',
-                            labelStyle: TextStyle(color: Colors.grey.shade600),
-                            prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFF2D6A4F)),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(color: Color(0xFF2D6A4F), width: 1.5),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(color: Color(0xFF1B4332), width: 2),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(color: AppConstants.errorColor),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(color: AppConstants.errorColor, width: 2),
-                            ),
+                            hintText: loc.translate('auth.email_hint'),
+                            prefixIcon: const Icon(Icons.email_outlined, color: AppConstants.primaryColor),
                             filled: true,
-                            fillColor: Colors.white,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                            fillColor: Colors.grey[50],
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey.shade300)),
+                            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey.shade300)),
+                            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppConstants.primaryColor, width: 2)),
                           ),
                           validator: (v) {
-                            if (v == null || v.isEmpty) return 'Introduza o email';
-                            if (!v.contains('@')) return 'Email inválido';
+                            if (v == null || v.isEmpty) return loc.translate('auth.email_error');
+                            if (!v.contains('@')) return loc.translate('auth.email_error');
                             return null;
                           },
                         ),
                         const SizedBox(height: 16),
 
-                        // Senha
+                        // Password
+                        Text(loc.translate('auth.password'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                        const SizedBox(height: 6),
                         TextFormField(
-                          controller: _passwordController,
+                          controller: _passCtrl,
                           obscureText: _obscurePassword,
-                          style: const TextStyle(color: Color(0xFF1B4332)),
                           decoration: InputDecoration(
-                            labelText: 'Senha',
-                            labelStyle: TextStyle(color: Colors.grey.shade600),
-                            prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF2D6A4F)),
+                            hintText: loc.translate('auth.password_hint'),
+                            prefixIcon: const Icon(Icons.lock_outline, color: AppConstants.primaryColor),
                             suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscurePassword ? Icons.visibility_off : Icons.visibility,
-                                color: const Color(0xFFD4A017),
-                              ),
+                              icon: Icon(_obscurePassword ? Icons.visibility_off : Icons.visibility, color: Colors.grey),
                               onPressed: () => setState(() => _obscurePassword = !_obscurePassword),
                             ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(color: Color(0xFF2D6A4F), width: 1.5),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(color: Color(0xFF1B4332), width: 2),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(color: AppConstants.errorColor),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(color: AppConstants.errorColor, width: 2),
-                            ),
                             filled: true,
-                            fillColor: Colors.white,
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                            fillColor: Colors.grey[50],
+                            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey.shade300)),
+                            enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide(color: Colors.grey.shade300)),
+                            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppConstants.primaryColor, width: 2)),
                           ),
                           validator: (v) {
-                            if (v == null || v.isEmpty) return 'Introduza a senha';
+                            if (v == null || v.isEmpty) return loc.translate('auth.password_error');
                             return null;
                           },
                         ),
@@ -244,7 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           builder: (_, auth, __) {
                             if (auth.error != null) {
                               return Padding(
-                                padding: const EdgeInsets.only(top: 8, bottom: 8),
+                                padding: const EdgeInsets.only(top: 8),
                                 child: Container(
                                   padding: const EdgeInsets.all(12),
                                   decoration: BoxDecoration(
@@ -296,11 +208,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                           color: Colors.white,
                                         ),
                                       )
-                                    : Consumer<LocalizationProvider>(
-                                        builder: (_, loc, __) => Text(
-                                          loc.translate('common.login'),
-                                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                                        ),
+                                    : Text(
+                                        loc.translate('common.login'),
+                                        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                                       ),
                               ),
                             );
@@ -309,22 +219,23 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 16),
 
                         // Esqueceu a senha?
-                        TextButton(
-                          onPressed: () {
-                            // TODO: implementar recuperação de senha
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Funcionalidade de recuperação de senha em desenvolvimento.'),
-                                backgroundColor: Color(0xFF2D6A4F),
+                        Center(
+                          child: TextButton(
+                            onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(loc.translate('auth.forgot_password_msg')),
+                                  backgroundColor: const Color(0xFF2D6A4F),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              loc.translate('auth.forgot_password'),
+                              style: const TextStyle(
+                                color: Color(0xFF1B4332),
+                                decoration: TextDecoration.underline,
+                                fontSize: 14,
                               ),
-                            );
-                          },
-                          child: const Text(
-                            'Esqueceu a senha?',
-                            style: TextStyle(
-                              color: Color(0xFF1B4332),
-                              decoration: TextDecoration.underline,
-                              fontSize: 14,
                             ),
                           ),
                         ),
@@ -337,7 +248,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Expanded(child: Divider(color: Colors.grey.shade300)),
                               Padding(
                                 padding: const EdgeInsets.symmetric(horizontal: 16),
-                                child: Text('ou', style: TextStyle(color: Colors.grey.shade500, fontSize: 14)),
+                                child: Text(loc.translate('auth.or'), style: TextStyle(color: Colors.grey.shade500, fontSize: 14)),
                               ),
                               Expanded(child: Divider(color: Colors.grey.shade300)),
                             ],
@@ -359,9 +270,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 borderRadius: BorderRadius.circular(30),
                               ),
                             ),
-                            child: const Text(
-                              'Criar Conta',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            child: Text(
+                              loc.translate('auth.create_account'),
+                              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                             ),
                           ),
                         ),

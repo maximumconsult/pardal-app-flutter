@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../providers/data_provider.dart';
+import '../../providers/localization_provider.dart';
 import '../../utils/constants.dart';
 
 class AddCostScreen extends StatefulWidget {
@@ -60,10 +61,11 @@ class _AddCostScreenState extends State<AddCostScreen> {
   }
 
   Future<void> _submit() async {
+    final loc = context.read<LocalizationProvider>();
     if (!_formKey.currentState!.validate()) return;
     if (_categoryId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Seleccione uma categoria'), backgroundColor: AppConstants.errorColor),
+        SnackBar(content: Text(loc.translate('costs.category_required')), backgroundColor: AppConstants.errorColor),
       );
       return;
     }
@@ -82,7 +84,7 @@ class _AddCostScreenState extends State<AddCostScreen> {
     final success = await data.storeCost(widget.batchId, body);
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Custo registado com sucesso!'), backgroundColor: AppConstants.successColor),
+        SnackBar(content: Text(loc.translate('costs.success_message')), backgroundColor: AppConstants.successColor),
       );
       Navigator.of(context).pop(true);
     } else if (mounted && data.error != null) {
@@ -94,13 +96,15 @@ class _AddCostScreenState extends State<AddCostScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.watch<LocalizationProvider>();
+
     return Scaffold(
       backgroundColor: AppConstants.backgroundColor,
       appBar: AppBar(
         backgroundColor: AppConstants.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
-        title: Text('Custo - ${widget.batchName}'),
+        title: Text('${loc.translate('costs.cost')} - ${widget.batchName}'),
       ),
       body: Consumer<DataProvider>(
         builder: (_, data, __) {
@@ -112,7 +116,7 @@ class _AddCostScreenState extends State<AddCostScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   // Data
-                  const Text('Data', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text(loc.translate('costs.date'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 6),
                   GestureDetector(
                     onTap: _pickDate,
@@ -136,7 +140,7 @@ class _AddCostScreenState extends State<AddCostScreen> {
                   const SizedBox(height: 18),
 
                   // Categoria
-                  const Text('Categoria', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text(loc.translate('costs.category'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 6),
                   Container(
                     width: double.infinity,
@@ -150,7 +154,7 @@ class _AddCostScreenState extends State<AddCostScreen> {
                       child: DropdownButton<int>(
                         value: _categoryId,
                         isExpanded: true,
-                        hint: const Text('Seleccione a categoria'),
+                        hint: Text(loc.translate('costs.select_category')),
                         items: data.categories.map<DropdownMenuItem<int>>((cat) {
                           final catIcon = AppConstants.categoryEmoji(cat['icon'] ?? '');
                           return DropdownMenuItem<int>(
@@ -172,7 +176,7 @@ class _AddCostScreenState extends State<AddCostScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Quantidade', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                            Text(loc.translate('costs.quantity'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                             const SizedBox(height: 6),
                             TextFormField(
                               controller: _quantityCtrl,
@@ -188,7 +192,7 @@ class _AddCostScreenState extends State<AddCostScreen> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Unidade', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                            Text(loc.translate('costs.unit'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                             const SizedBox(height: 6),
                             TextFormField(
                               controller: _unitCtrl,
@@ -202,7 +206,7 @@ class _AddCostScreenState extends State<AddCostScreen> {
                   const SizedBox(height: 18),
 
                   // Preço unitário
-                  const Text('Preço Unitário (MT)', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text(loc.translate('costs.unit_price'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 6),
                   TextFormField(
                     controller: _unitPriceCtrl,
@@ -213,27 +217,27 @@ class _AddCostScreenState extends State<AddCostScreen> {
                   const SizedBox(height: 18),
 
                   // Valor total
-                  const Text('Valor Total (MT) *', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text('${loc.translate('costs.total_value')} *', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 6),
                   TextFormField(
                     controller: _totalCtrl,
                     keyboardType: const TextInputType.numberWithOptions(decimal: true),
                     decoration: _inputDecoration('Ex: 1250.00'),
                     validator: (v) {
-                      if (v == null || v.isEmpty) return 'Valor total é obrigatório';
-                      if (double.tryParse(v) == null || double.parse(v) <= 0) return 'Valor inválido';
+                      if (v == null || v.isEmpty) return loc.translate('costs.total_required');
+                      if (double.tryParse(v) == null || double.parse(v) <= 0) return loc.translate('costs.total_invalid');
                       return null;
                     },
                   ),
                   const SizedBox(height: 18),
 
                   // Descrição
-                  const Text('Descrição', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text(loc.translate('costs.description'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 6),
                   TextFormField(
                     controller: _descCtrl,
                     maxLines: 3,
-                    decoration: _inputDecoration('Descrição opcional...'),
+                    decoration: _inputDecoration(loc.translate('costs.description_hint')),
                   ),
                   const SizedBox(height: 28),
 
@@ -251,7 +255,7 @@ class _AddCostScreenState extends State<AddCostScreen> {
                       ),
                       child: data.isLoading
                           ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                          : const Text('Registar Custo', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                          : Text(loc.translate('costs.register_cost'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                     ),
                   ),
                 ],

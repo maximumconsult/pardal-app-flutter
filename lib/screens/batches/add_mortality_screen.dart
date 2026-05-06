@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../providers/data_provider.dart';
+import '../../providers/localization_provider.dart';
 import '../../utils/constants.dart';
 
 class AddMortalityScreen extends StatefulWidget {
@@ -49,6 +50,7 @@ class _AddMortalityScreenState extends State<AddMortalityScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     final data = context.read<DataProvider>();
+    final loc = context.read<LocalizationProvider>();
     final success = await data.storeMortality(widget.batchId, {
       'quantity': int.parse(_quantityCtrl.text),
       'cause': _causeCtrl.text.isNotEmpty ? _causeCtrl.text : null,
@@ -57,7 +59,7 @@ class _AddMortalityScreenState extends State<AddMortalityScreen> {
 
     if (success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Mortalidade registada com sucesso!'), backgroundColor: AppConstants.successColor),
+        SnackBar(content: Text(loc.translate('mortalities.success_message')), backgroundColor: AppConstants.successColor),
       );
       Navigator.of(context).pop(true);
     } else if (mounted && data.error != null) {
@@ -69,13 +71,15 @@ class _AddMortalityScreenState extends State<AddMortalityScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.watch<LocalizationProvider>();
+
     return Scaffold(
       backgroundColor: AppConstants.backgroundColor,
       appBar: AppBar(
         backgroundColor: AppConstants.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
-        title: const Text('Registar Mortalidade'),
+        title: Text(loc.translate('mortalities.add_mortality')),
       ),
       body: Consumer<DataProvider>(
         builder: (_, data, __) {
@@ -103,7 +107,10 @@ class _AddMortalityScreenState extends State<AddMortalityScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(widget.batchName, style: const TextStyle(fontWeight: FontWeight.w600)),
-                              Text('Quantidade actual: ${widget.currentQuantity} animais', style: TextStyle(fontSize: 13, color: Colors.grey[600])),
+                              Text(
+                                loc.translateWithParams('mortalities.current_quantity', {'count': '${widget.currentQuantity}'}),
+                                style: TextStyle(fontSize: 13, color: Colors.grey[600]),
+                              ),
                             ],
                           ),
                         ),
@@ -113,7 +120,7 @@ class _AddMortalityScreenState extends State<AddMortalityScreen> {
                   const SizedBox(height: 24),
 
                   // Data
-                  const Text('Data da Ocorrência', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text(loc.translate('mortalities.date_label'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 6),
                   GestureDetector(
                     onTap: _pickDate,
@@ -137,7 +144,7 @@ class _AddMortalityScreenState extends State<AddMortalityScreen> {
                   const SizedBox(height: 18),
 
                   // Quantidade
-                  const Text('Quantidade de Perdas *', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text(loc.translate('mortalities.losses_quantity'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 6),
                   TextFormField(
                     controller: _quantityCtrl,
@@ -152,23 +159,23 @@ class _AddMortalityScreenState extends State<AddMortalityScreen> {
                       focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: const BorderSide(color: AppConstants.primaryColor, width: 2)),
                     ),
                     validator: (v) {
-                      if (v == null || v.isEmpty) return 'Quantidade é obrigatória';
+                      if (v == null || v.isEmpty) return loc.translate('mortalities.quantity_required');
                       final qty = int.tryParse(v);
-                      if (qty == null || qty <= 0) return 'Quantidade inválida';
-                      if (qty > widget.currentQuantity) return 'Não pode exceder ${widget.currentQuantity}';
+                      if (qty == null || qty <= 0) return loc.translate('mortalities.quantity_invalid');
+                      if (qty > widget.currentQuantity) return loc.translateWithParams('mortalities.quantity_exceed', {'max': '${widget.currentQuantity}'});
                       return null;
                     },
                   ),
                   const SizedBox(height: 18),
 
                   // Causa
-                  const Text('Causa / Motivo', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                  Text(loc.translate('mortalities.cause'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
                   const SizedBox(height: 6),
                   TextFormField(
                     controller: _causeCtrl,
                     maxLines: 3,
                     decoration: InputDecoration(
-                      hintText: 'Descreva a causa da mortalidade...',
+                      hintText: loc.translate('mortalities.cause_hint'),
                       filled: true,
                       fillColor: Colors.white,
                       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -193,7 +200,7 @@ class _AddMortalityScreenState extends State<AddMortalityScreen> {
                       ),
                       child: data.isLoading
                           ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                          : const Text('Registar Mortalidade', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
+                          : Text(loc.translate('mortalities.register_btn'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                     ),
                   ),
                 ],

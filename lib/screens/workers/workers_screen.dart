@@ -3,8 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import '../../providers/data_provider.dart';
 import '../../providers/auth_provider.dart';
-import '../../utils/constants.dart';
 import '../../providers/localization_provider.dart';
+import '../../utils/constants.dart';
 
 class WorkersScreen extends StatefulWidget {
   const WorkersScreen({super.key});
@@ -35,219 +35,223 @@ class _WorkersScreenState extends State<WorkersScreen> {
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (ctx) => StatefulBuilder(
-        builder: (ctx, setSheetState) => Container(
-          decoration: const BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-          ),
-          padding: EdgeInsets.only(
-            left: 20,
-            right: 20,
-            top: 20,
-            bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
-          ),
-          child: SingleChildScrollView(
-            child: Form(
-              key: formKey,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Handle bar
-                  Center(
-                    child: Container(
-                      width: 40,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.grey[300],
-                        borderRadius: BorderRadius.circular(2),
+        builder: (ctx, setSheetState) {
+          final loc = ctx.watch<LocalizationProvider>();
+          return Container(
+            decoration: const BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+            ),
+            padding: EdgeInsets.only(
+              left: 20,
+              right: 20,
+              top: 20,
+              bottom: MediaQuery.of(ctx).viewInsets.bottom + 20,
+            ),
+            child: SingleChildScrollView(
+              child: Form(
+                key: formKey,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Handle bar
+                    Center(
+                      child: Container(
+                        width: 40,
+                        height: 4,
+                        decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(2),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    context.watch<LocalizationProvider>().translate('workers.add_worker'),
-                    style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    context.watch<LocalizationProvider>().translate('workers.fill_data'),
-                    style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-                  ),
-                  const SizedBox(height: 20),
+                    const SizedBox(height: 16),
+                    Text(
+                      loc.translate('workers.add_worker'),
+                      style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      loc.translate('workers.fill_data'),
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                    ),
+                    const SizedBox(height: 20),
 
-                  // Nome
-                  Text(context.watch<LocalizationProvider>().translate('common.full_name'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    controller: nameCtrl,
-                    decoration: _inputDecoration('Ex: João Silva'),
-                    validator: (v) => (v == null || v.isEmpty) ? context.watch<LocalizationProvider>().translate('common.name_required') : null,
-                  ),
-                  const SizedBox(height: 14),
+                    // Nome
+                    Text(loc.translate('common.full_name'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                    const SizedBox(height: 6),
+                    TextFormField(
+                      controller: nameCtrl,
+                      decoration: _inputDecoration('Ex: João Silva'),
+                      validator: (v) => (v == null || v.isEmpty) ? loc.translate('common.name_required') : null,
+                    ),
+                    const SizedBox(height: 14),
 
-                  // Email
-                  Text(context.watch<LocalizationProvider>().translate('common.email'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    controller: emailCtrl,
-                    keyboardType: TextInputType.emailAddress,
-                    decoration: _inputDecoration('Ex: joao@email.com'),
-                    validator: (v) {
-                      if (v == null || v.isEmpty) return context.watch<LocalizationProvider>().translate('common.email_required');
-                      if (!v.contains('@')) return context.watch<LocalizationProvider>().translate('common.invalid_email');
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 14),
+                    // Email
+                    Text(loc.translate('common.email'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                    const SizedBox(height: 6),
+                    TextFormField(
+                      controller: emailCtrl,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: _inputDecoration('Ex: joao@email.com'),
+                      validator: (v) {
+                        if (v == null || v.isEmpty) return loc.translate('common.email_required');
+                        if (!v.contains('@')) return loc.translate('common.invalid_email');
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 14),
 
-                  // Telefone
-                  Text(context.watch<LocalizationProvider>().translate('common.phone'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    controller: phoneCtrl,
-                    keyboardType: TextInputType.phone,
-                    decoration: _inputDecoration('Ex: +258 84 123 4567'),
-                  ),
-                  const SizedBox(height: 14),
+                    // Telefone
+                    Text(loc.translate('common.phone'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                    const SizedBox(height: 6),
+                    TextFormField(
+                      controller: phoneCtrl,
+                      keyboardType: TextInputType.phone,
+                      decoration: _inputDecoration('Ex: +258 84 123 4567'),
+                    ),
+                    const SizedBox(height: 14),
 
-                  // Password
-                  Text(context.watch<LocalizationProvider>().translate('common.password'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                  const SizedBox(height: 6),
-                  TextFormField(
-                    controller: passwordCtrl,
-                    obscureText: true,
-                    decoration: _inputDecoration('Mínimo 6 caracteres'),
-                    validator: (v) {
-                      if (v == null || v.isEmpty) return context.watch<LocalizationProvider>().translate('common.password_required');
-                      if (v.length < 6) return context.watch<LocalizationProvider>().translate('common.min_6_chars');
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 14),
+                    // Password
+                    Text(loc.translate('common.password'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                    const SizedBox(height: 6),
+                    TextFormField(
+                      controller: passwordCtrl,
+                      obscureText: true,
+                      decoration: _inputDecoration(loc.translate('common.min_6_chars')),
+                      validator: (v) {
+                        if (v == null || v.isEmpty) return loc.translate('common.password_required');
+                        if (v.length < 6) return loc.translate('common.min_6_chars');
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 14),
 
-                  // Função
-                  Text(context.watch<LocalizationProvider>().translate('workers.role'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => setSheetState(() => selectedRole = 'worker'),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            decoration: BoxDecoration(
-                              color: selectedRole == 'worker' ? AppConstants.primaryColor.withOpacity(0.1) : Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: selectedRole == 'worker' ? AppConstants.primaryColor : Colors.grey.shade300,
-                                width: selectedRole == 'worker' ? 2 : 1,
-                              ),
-                            ),
-                            child: Column(
-                              children: [
-                                Icon(Icons.person, color: selectedRole == 'worker' ? AppConstants.primaryColor : Colors.grey[400], size: 28),
-                                const SizedBox(height: 4),
-                                Text(
-                                  context.watch<LocalizationProvider>().translate('workers.worker'),
-                                  style: TextStyle(
-                                    fontWeight: selectedRole == 'worker' ? FontWeight.w700 : FontWeight.w500,
-                                    color: selectedRole == 'worker' ? AppConstants.primaryColor : Colors.grey[600],
-                                    fontSize: 13,
-                                  ),
+                    // Função
+                    Text(loc.translate('workers.role'), style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => setSheetState(() => selectedRole = 'worker'),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              decoration: BoxDecoration(
+                                color: selectedRole == 'worker' ? AppConstants.primaryColor.withOpacity(0.1) : Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: selectedRole == 'worker' ? AppConstants.primaryColor : Colors.grey.shade300,
+                                  width: selectedRole == 'worker' ? 2 : 1,
                                 ),
-                              ],
+                              ),
+                              child: Column(
+                                children: [
+                                  Icon(Icons.person, color: selectedRole == 'worker' ? AppConstants.primaryColor : Colors.grey[400], size: 28),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    loc.translate('workers.worker'),
+                                    style: TextStyle(
+                                      fontWeight: selectedRole == 'worker' ? FontWeight.w700 : FontWeight.w500,
+                                      color: selectedRole == 'worker' ? AppConstants.primaryColor : Colors.grey[600],
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () => setSheetState(() => selectedRole = 'manager'),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-                            decoration: BoxDecoration(
-                              color: selectedRole == 'manager' ? AppConstants.accentColor.withOpacity(0.1) : Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(
-                                color: selectedRole == 'manager' ? AppConstants.accentColor : Colors.grey.shade300,
-                                width: selectedRole == 'manager' ? 2 : 1,
-                              ),
-                            ),
-                            child: Column(
-                              children: [
-                                Icon(Icons.manage_accounts, color: selectedRole == 'manager' ? AppConstants.accentColor : Colors.grey[400], size: 28),
-                                const SizedBox(height: 4),
-                                Text(
-                                  context.watch<LocalizationProvider>().translate('workers.manager'),
-                                  style: TextStyle(
-                                    fontWeight: selectedRole == 'manager' ? FontWeight.w700 : FontWeight.w500,
-                                    color: selectedRole == 'manager' ? AppConstants.accentColor : Colors.grey[600],
-                                    fontSize: 13,
-                                  ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => setSheetState(() => selectedRole = 'manager'),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              decoration: BoxDecoration(
+                                color: selectedRole == 'manager' ? AppConstants.accentColor.withOpacity(0.1) : Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: selectedRole == 'manager' ? AppConstants.accentColor : Colors.grey.shade300,
+                                  width: selectedRole == 'manager' ? 2 : 1,
                                 ),
-                              ],
+                              ),
+                              child: Column(
+                                children: [
+                                  Icon(Icons.manage_accounts, color: selectedRole == 'manager' ? AppConstants.accentColor : Colors.grey[400], size: 28),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    loc.translate('workers.manager'),
+                                    style: TextStyle(
+                                      fontWeight: selectedRole == 'manager' ? FontWeight.w700 : FontWeight.w500,
+                                      color: selectedRole == 'manager' ? AppConstants.accentColor : Colors.grey[600],
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 24),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
 
-                  // Botão
-                  Consumer<DataProvider>(
-                    builder: (_, data, __) => SizedBox(
-                      width: double.infinity,
-                      height: 52,
-                      child: ElevatedButton(
-                        onPressed: data.isLoading ? null : () async {
-                          if (!formKey.currentState!.validate()) return;
-                          final body = <String, dynamic>{
-                            'name': nameCtrl.text,
-                            'email': emailCtrl.text,
-                            'password': passwordCtrl.text,
-                            'role': selectedRole,
-                          };
-                          if (phoneCtrl.text.isNotEmpty) body['phone'] = phoneCtrl.text;
+                    // Botão
+                    Consumer<DataProvider>(
+                      builder: (_, data, __) => SizedBox(
+                        width: double.infinity,
+                        height: 52,
+                        child: ElevatedButton(
+                          onPressed: data.isLoading ? null : () async {
+                            if (!formKey.currentState!.validate()) return;
+                            final body = <String, dynamic>{
+                              'name': nameCtrl.text,
+                              'email': emailCtrl.text,
+                              'password': passwordCtrl.text,
+                              'role': selectedRole,
+                            };
+                            if (phoneCtrl.text.isNotEmpty) body['phone'] = phoneCtrl.text;
 
-                          final success = await data.addWorker(body);
-                          if (success && ctx.mounted) {
-                            await data.loadWorkers();
-                            if (ctx.mounted) {
-                              Navigator.pop(ctx);
-                              _showWorkerAddedDialog(nameCtrl.text, selectedRole);
+                            final success = await data.addWorker(body);
+                            if (success && ctx.mounted) {
+                              await data.loadWorkers();
+                              if (ctx.mounted) {
+                                Navigator.pop(ctx);
+                                _showWorkerAddedDialog(nameCtrl.text, selectedRole);
+                              }
+                            } else if (ctx.mounted && data.error != null) {
+                              ScaffoldMessenger.of(ctx).showSnackBar(
+                                SnackBar(content: Text(data.error!), backgroundColor: AppConstants.errorColor),
+                              );
                             }
-                          } else if (ctx.mounted && data.error != null) {
-                            ScaffoldMessenger.of(ctx).showSnackBar(
-                              SnackBar(content: Text(data.error!), backgroundColor: AppConstants.errorColor),
-                            );
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppConstants.primaryColor,
-                          foregroundColor: Colors.white,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                          elevation: 0,
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppConstants.primaryColor,
+                            foregroundColor: Colors.white,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            elevation: 0,
+                          ),
+                          child: data.isLoading
+                              ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
+                              : Text(loc.translate('workers.add_worker_btn'), style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                         ),
-                        child: data.isLoading
-                            ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white))
-                            : const Text('Adicionar Colaborador', style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600)),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ),
+          );
+        },
       ),
     );
   }
 
   void _showWorkerAddedDialog(String name, String role) {
-    final roleLabel = role == 'manager' ? 'Gestor' : 'Colaborador';
+    final loc = context.read<LocalizationProvider>();
+    final roleLabel = loc.translateRole(role);
     showDialog(
       context: context,
       barrierDismissible: false,
@@ -265,13 +269,13 @@ class _WorkersScreenState extends State<WorkersScreen> {
               child: const Icon(Icons.person_add, color: AppConstants.successColor, size: 48),
             ),
             const SizedBox(height: 16),
-            const Text(
-              'Colaborador Adicionado!',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            Text(
+              loc.translate('workers.worker_added'),
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
             Text(
-              '$name foi adicionado como $roleLabel. Pode agora fazer login no Pardal com as credenciais fornecidas.',
+              loc.translateWithParams('workers.worker_added_message', {'name': name, 'role': roleLabel}),
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 14, color: Colors.grey[600]),
             ),
@@ -306,17 +310,6 @@ class _WorkersScreenState extends State<WorkersScreen> {
     }
   }
 
-  String _roleLabel(String role) {
-    switch (role) {
-      case 'admin':
-        return 'Administrador';
-      case 'manager':
-        return 'Gestor';
-      default:
-        return 'Colaborador';
-    }
-  }
-
   IconData _roleIcon(String role) {
     switch (role) {
       case 'admin':
@@ -342,6 +335,7 @@ class _WorkersScreenState extends State<WorkersScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.watch<LocalizationProvider>();
     final auth = context.watch<AuthProvider>();
     final userRole = auth.user?['role'] ?? '';
     final isAdminOrManager = userRole == 'admin' || userRole == 'manager';
@@ -352,9 +346,14 @@ class _WorkersScreenState extends State<WorkersScreen> {
         backgroundColor: AppConstants.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
-        title: Consumer<LocalizationProvider>(
-          builder: (_, localization, __) => Text(localization.translate('workers.title')),
-        ),
+        title: Text(loc.translate('workers.title')),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            tooltip: loc.translate('common.refresh'),
+            onPressed: () => context.read<DataProvider>().loadWorkers(),
+          ),
+        ],
       ),
       body: Consumer<DataProvider>(
         builder: (_, data, __) {
@@ -371,9 +370,9 @@ class _WorkersScreenState extends State<WorkersScreen> {
                 children: [
                   Icon(Icons.group_off, size: 64, color: Colors.grey[300]),
                   const SizedBox(height: 16),
-                  Text('Nenhum colaborador', style: TextStyle(fontSize: 18, color: Colors.grey[500], fontWeight: FontWeight.w600)),
+                  Text(loc.translate('workers.no_workers'), style: TextStyle(fontSize: 18, color: Colors.grey[500], fontWeight: FontWeight.w600)),
                   const SizedBox(height: 8),
-                  Text('Adicione colaboradores para gerir a sua quinta', style: TextStyle(fontSize: 14, color: Colors.grey[400])),
+                  Text(loc.translate('workers.add_workers_hint'), style: TextStyle(fontSize: 14, color: Colors.grey[400])),
                 ],
               ),
             );
@@ -400,11 +399,11 @@ class _WorkersScreenState extends State<WorkersScreen> {
                   ),
                   child: Row(
                     children: [
-                      _summaryItem('Total', workers.length.toString(), Icons.group, AppConstants.primaryColor),
+                      _summaryItem(loc.translate('workers.total'), workers.length.toString(), Icons.group, AppConstants.primaryColor),
                       _divider(),
-                      _summaryItem('Gestores', managers.length.toString(), Icons.manage_accounts, AppConstants.accentColor),
+                      _summaryItem(loc.translate('workers.managers'), managers.length.toString(), Icons.manage_accounts, AppConstants.accentColor),
                       _divider(),
-                      _summaryItem('Colaboradores', workersList.length.toString(), Icons.person, Colors.blue),
+                      _summaryItem(loc.translate('workers.workers'), workersList.length.toString(), Icons.person, Colors.blue),
                     ],
                   ),
                 ),
@@ -412,7 +411,7 @@ class _WorkersScreenState extends State<WorkersScreen> {
 
                 // Admins
                 if (admins.isNotEmpty) ...[
-                  _sectionHeader('Administradores', admins.length),
+                  _sectionHeader(loc.translate('workers.administrators'), admins.length),
                   const SizedBox(height: 8),
                   ...admins.map((w) => _workerCard(w)),
                   const SizedBox(height: 16),
@@ -420,7 +419,7 @@ class _WorkersScreenState extends State<WorkersScreen> {
 
                 // Managers
                 if (managers.isNotEmpty) ...[
-                  _sectionHeader('Gestores', managers.length),
+                  _sectionHeader(loc.translate('workers.managers'), managers.length),
                   const SizedBox(height: 8),
                   ...managers.map((w) => _workerCard(w)),
                   const SizedBox(height: 16),
@@ -428,7 +427,7 @@ class _WorkersScreenState extends State<WorkersScreen> {
 
                 // Workers
                 if (workersList.isNotEmpty) ...[
-                  _sectionHeader('Colaboradores', workersList.length),
+                  _sectionHeader(loc.translate('workers.workers'), workersList.length),
                   const SizedBox(height: 8),
                   ...workersList.map((w) => _workerCard(w)),
                 ],
@@ -443,7 +442,7 @@ class _WorkersScreenState extends State<WorkersScreen> {
               backgroundColor: AppConstants.primaryColor,
               foregroundColor: Colors.white,
               icon: const Icon(Icons.person_add),
-              label: const Text('Adicionar', style: TextStyle(fontWeight: FontWeight.w600)),
+              label: Text(loc.translate('workers.add'), style: const TextStyle(fontWeight: FontWeight.w600)),
             )
           : null,
     );
@@ -484,6 +483,7 @@ class _WorkersScreenState extends State<WorkersScreen> {
   }
 
   Widget _workerCard(Map<String, dynamic> worker) {
+    final loc = context.watch<LocalizationProvider>();
     final role = worker['role'] ?? 'worker';
     final status = worker['status'] ?? 'active';
     final createdAt = worker['created_at'] != null
@@ -520,7 +520,7 @@ class _WorkersScreenState extends State<WorkersScreen> {
                   children: [
                     Expanded(
                       child: Text(
-                        worker['name'] ?? 'Sem nome',
+                        worker['name'] ?? loc.translate('workers.no_name'),
                         style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 15),
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -532,7 +532,7 @@ class _WorkersScreenState extends State<WorkersScreen> {
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Text(
-                        _roleLabel(role),
+                        loc.translateRole(role),
                         style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600, color: _roleColor(role)),
                       ),
                     ),
@@ -563,7 +563,10 @@ class _WorkersScreenState extends State<WorkersScreen> {
                     ],
                     Icon(Icons.calendar_today_outlined, size: 14, color: Colors.grey[400]),
                     const SizedBox(width: 4),
-                    Text('Desde $createdAt', style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+                    Text(
+                      loc.translateWithParams('workers.since_date', {'date': createdAt}),
+                      style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                    ),
                   ],
                 ),
               ],

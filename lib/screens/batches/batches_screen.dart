@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../providers/data_provider.dart';
+import '../../providers/localization_provider.dart';
 import '../../utils/constants.dart';
 import 'batch_detail_screen.dart';
 
@@ -9,16 +10,19 @@ class BatchesScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.watch<LocalizationProvider>();
+
     return Scaffold(
       backgroundColor: AppConstants.backgroundColor,
       appBar: AppBar(
         backgroundColor: AppConstants.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
-        title: const Text('Ciclos / Lotes'),
+        title: Text(loc.translate('batches.cycles_batches')),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
+            tooltip: loc.translate('common.refresh'),
             onPressed: () => context.read<DataProvider>().loadBatches(),
           ),
         ],
@@ -35,11 +39,11 @@ class BatchesScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.inventory_2_outlined, size: 64, color: Colors.grey[300]),
                   const SizedBox(height: 16),
-                  Text('Nenhum lote encontrado', style: TextStyle(color: Colors.grey[500], fontSize: 16)),
+                  Text(loc.translate('batches.no_batches'), style: TextStyle(color: Colors.grey[500], fontSize: 16)),
                   const SizedBox(height: 8),
                   TextButton(
                     onPressed: () => data.loadBatches(),
-                    child: const Text('Actualizar'),
+                    child: Text(loc.translate('common.refresh')),
                   ),
                 ],
               ),
@@ -56,13 +60,13 @@ class BatchesScreen extends StatelessWidget {
               padding: const EdgeInsets.all(16),
               children: [
                 if (activeBatches.isNotEmpty) ...[
-                  _SectionHeader(title: 'Lotes Activos', count: activeBatches.length),
+                  _SectionHeader(title: loc.translate('batches.active_batches'), count: activeBatches.length),
                   const SizedBox(height: 8),
                   ...activeBatches.map((b) => _BatchCard(batch: b)),
                 ],
                 if (completedBatches.isNotEmpty) ...[
                   const SizedBox(height: 24),
-                  _SectionHeader(title: 'Lotes Concluídos', count: completedBatches.length),
+                  _SectionHeader(title: loc.translate('batches.completed_batches'), count: completedBatches.length),
                   const SizedBox(height: 8),
                   ...completedBatches.map((b) => _BatchCard(batch: b, isCompleted: true)),
                 ],
@@ -106,6 +110,7 @@ class _BatchCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.watch<LocalizationProvider>();
     final species = batch['species'] as Map<String, dynamic>?;
     final icon = species != null ? AppConstants.speciesEmoji(species['icon'] ?? '') : '🐾';
     final initial = batch['initial_quantity'] ?? 0;
@@ -176,7 +181,7 @@ class _BatchCard extends StatelessWidget {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
-                          AppConstants.statusLabel(batch['status'] ?? ''),
+                          loc.translateStatus(batch['status'] ?? 'active'),
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w600,
@@ -188,7 +193,7 @@ class _BatchCard extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    '${species?['name'] ?? ''} · $current / $initial animais',
+                    '${species?['name'] ?? ''} · $current / $initial ${loc.translate('common.animals')}',
                     style: TextStyle(fontSize: 13, color: Colors.grey[600]),
                   ),
                   if (mortality > 0) ...[
@@ -198,7 +203,7 @@ class _BatchCard extends StatelessWidget {
                         Icon(Icons.trending_down, size: 14, color: mortality > 5 ? AppConstants.errorColor : Colors.orange),
                         const SizedBox(width: 4),
                         Text(
-                          'Mortalidade: ${mortality.toStringAsFixed(1)}%',
+                          loc.translateWithParams('batches.mortality_label', {'rate': mortality.toStringAsFixed(1)}),
                           style: TextStyle(
                             fontSize: 12,
                             color: mortality > 5 ? AppConstants.errorColor : Colors.orange,

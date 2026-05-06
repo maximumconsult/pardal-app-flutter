@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:intl/intl.dart';
 import '../../providers/data_provider.dart';
+import '../../providers/localization_provider.dart';
 import '../../utils/constants.dart';
-import '../costs/add_cost_screen.dart';
 import 'add_mortality_screen.dart';
+import '../costs/add_cost_screen.dart';
 
 class BatchDetailScreen extends StatefulWidget {
   final int batchId;
@@ -24,34 +26,33 @@ class _BatchDetailScreenState extends State<BatchDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final loc = context.watch<LocalizationProvider>();
+
     return Scaffold(
       backgroundColor: AppConstants.backgroundColor,
       appBar: AppBar(
         backgroundColor: AppConstants.primaryColor,
         foregroundColor: Colors.white,
         elevation: 0,
-        title: const Text('Detalhe do Lote'),
+        title: Text(loc.translate('batch_detail.title')),
       ),
       body: Consumer<DataProvider>(
         builder: (_, data, __) {
-          if (data.isLoading && data.batchDetail == null) {
+          if (data.isLoading) {
             return const Center(child: CircularProgressIndicator(color: AppConstants.primaryColor));
           }
-          final detail = data.batchDetail;
-          if (detail == null) {
-            return const Center(child: Text('Erro ao carregar o lote'));
+          final batch = data.batchDetail;
+          if (batch == null) {
+            return Center(child: Text(loc.translate('batch_detail.error_loading')));
           }
 
-          final batch = detail['batch'] as Map<String, dynamic>? ?? detail;
           final species = batch['species'] as Map<String, dynamic>?;
           final icon = species != null ? AppConstants.speciesEmoji(species['icon'] ?? '') : '🐾';
           final initial = batch['initial_quantity'] ?? 0;
           final current = batch['current_quantity'] ?? 0;
-          final mortalityRate = batch['mortality_rate'];
-          final mortality = mortalityRate is num ? mortalityRate.toDouble() : (initial > 0 ? ((initial - current) / initial * 100) : 0.0);
-          final isActive = batch['status'] == 'active';
-          final costs = batch['approved_costs'] as List<dynamic>? ?? batch['pending_costs'] as List<dynamic>? ?? detail['costs'] as List<dynamic>? ?? [];
-          final mortalityLogs = batch['mortality_logs'] as List<dynamic>? ?? detail['mortality_logs'] as List<dynamic>? ?? [];
+          final mortality = initial > 0 ? ((initial - current) / initial * 100) : 0.0;
+          final mortalities = batch['mortalities'] as List<dynamic>? ?? [];
+          final costs = batch['costs'] as List<dynamic>? ?? [];
 
           return RefreshIndicator(
             color: AppConstants.primaryColor,
@@ -59,7 +60,7 @@ class _BatchDetailScreenState extends State<BatchDetailScreen> {
             child: ListView(
               padding: const EdgeInsets.all(16),
               children: [
-                // Cabeçalho do lote
+                // Header do lote
                 Container(
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
@@ -74,15 +75,15 @@ class _BatchDetailScreenState extends State<BatchDetailScreen> {
                       Row(
                         children: [
                           Container(
-                            width: 60,
-                            height: 60,
+                            width: 56,
+                            height: 56,
                             decoration: BoxDecoration(
-                              color: AppConstants.accentColor.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(16),
+                              color: AppConstants.primaryColor.withOpacity(0.08),
+                              borderRadius: BorderRadius.circular(14),
                             ),
-                            child: Center(child: Text(icon, style: const TextStyle(fontSize: 32))),
+                            child: Center(child: Text(icon, style: const TextStyle(fontSize: 30))),
                           ),
-                          const SizedBox(width: 16),
+                          const SizedBox(width: 14),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -92,134 +93,146 @@ class _BatchDetailScreenState extends State<BatchDetailScreen> {
                               ],
                             ),
                           ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                            decoration: BoxDecoration(
-                              color: isActive ? AppConstants.accentColor.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Text(
-                              AppConstants.statusLabel(batch['status'] ?? ''),
-                              style: TextStyle(
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                                color: isActive ? AppConstants.primaryColor : Colors.grey,
-                              ),
-                            ),
-                          ),
                         ],
                       ),
                       const SizedBox(height: 20),
                       Row(
                         children: [
-                          _InfoTile(label: 'Quantidade Inicial', value: '$initial'),
-                          _InfoTile(label: 'Quantidade Actual', value: '$current'),
-                          _InfoTile(
-                            label: 'Mortalidade',
-                            value: '${mortality.toStringAsFixed(1)}%',
-                            valueColor: mortality > 5 ? AppConstants.errorColor : null,
-                          ),
+                          _InfoTile(label: loc.translate('batch_detail.initial_quantity'), value: '$initial'),
+                          _InfoTile(label: loc.translate('batch_detail.current_quantity'), value: '$current', valueColor: AppConstants.primaryColor),
+                          _InfoTile(label: loc.translate('batch_detail.mortality'), value: '${mortality.toStringAsFixed(1)}%', valueColor: mortality > 5 ? AppConstants.errorColor : AppConstants.warningColor),
                         ],
                       ),
                     ],
                   ),
                 ),
+                const SizedBox(height: 16),
 
-                // Acções rápidas
-                if (isActive) ...[
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _ActionButton(
-                          icon: Icons.add_circle_outline,
-                          label: 'Registar Custo',
-                          color: AppConstants.primaryColor,
-                          onTap: () async {
-                            final result = await Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => AddCostScreen(batchId: widget.batchId, batchName: batch['name'] ?? ''),
-                              ),
-                            );
-                            if (result == true && mounted) {
-                              context.read<DataProvider>().loadBatchDetail(widget.batchId);
-                            }
-                          },
-                        ),
+                // Botões de acção
+                Row(
+                  children: [
+                    Expanded(
+                      child: _ActionButton(
+                        icon: Icons.receipt_long,
+                        label: loc.translate('batch_detail.register_cost'),
+                        color: AppConstants.primaryColor,
+                        onTap: () async {
+                          final result = await Navigator.of(context).push(
+                            MaterialPageRoute(builder: (_) => AddCostScreen(batchId: widget.batchId, batchName: batch['name'] ?? '')),
+                          );
+                          if (result == true && mounted) {
+                            context.read<DataProvider>().loadBatchDetail(widget.batchId);
+                          }
+                        },
                       ),
-                      const SizedBox(width: 12),
-                      Expanded(
-                        child: _ActionButton(
-                          icon: Icons.trending_down,
-                          label: 'Registar Mortalidade',
-                          color: AppConstants.errorColor,
-                          onTap: () async {
-                            final result = await Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => AddMortalityScreen(
-                                  batchId: widget.batchId,
-                                  batchName: batch['name'] ?? '',
-                                  currentQuantity: current,
-                                ),
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: _ActionButton(
+                        icon: Icons.warning_amber,
+                        label: loc.translate('batch_detail.register_mortality'),
+                        color: AppConstants.errorColor,
+                        onTap: () async {
+                          final result = await Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (_) => AddMortalityScreen(
+                                batchId: widget.batchId,
+                                batchName: batch['name'] ?? '',
+                                currentQuantity: current,
                               ),
-                            );
-                            if (result == true && mounted) {
-                              context.read<DataProvider>().loadBatchDetail(widget.batchId);
-                            }
-                          },
-                        ),
+                            ),
+                          );
+                          if (result == true && mounted) {
+                            context.read<DataProvider>().loadBatchDetail(widget.batchId);
+                          }
+                        },
                       ),
-                    ],
-                  ),
-                ],
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 24),
 
                 // Registos de mortalidade
-                if (mortalityLogs.isNotEmpty) ...[
-                  const SizedBox(height: 24),
-                  const Text('Registos de Mortalidade', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppConstants.primaryDark)),
-                  const SizedBox(height: 8),
-                  ...mortalityLogs.take(5).map((log) => Container(
-                    margin: const EdgeInsets.only(bottom: 8),
-                    padding: const EdgeInsets.all(12),
+                Text(
+                  loc.translate('batch_detail.mortality_records'),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppConstants.primaryDark),
+                ),
+                const SizedBox(height: 8),
+                if (mortalities.isEmpty)
+                  Container(
+                    padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(color: AppConstants.errorColor.withOpacity(0.2)),
+                      borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Row(
-                      children: [
-                        const Icon(Icons.trending_down, color: AppConstants.errorColor, size: 20),
-                        const SizedBox(width: 10),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text('${log['quantity']} animais', style: const TextStyle(fontWeight: FontWeight.w600)),
-                              if (log['cause'] != null)
-                                Text(log['cause'], style: TextStyle(fontSize: 13, color: Colors.grey[600])),
-                            ],
+                    child: Center(
+                      child: Text(loc.translate('mortalities.no_records'), style: TextStyle(color: Colors.grey[500])),
+                    ),
+                  )
+                else
+                  ...mortalities.map((m) {
+                    final date = m['entry_date'] ?? m['created_at'] ?? '';
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: AppConstants.errorColor.withOpacity(0.2)),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: AppConstants.errorColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Center(
+                              child: Text('${m['quantity']}', style: const TextStyle(fontWeight: FontWeight.bold, color: AppConstants.errorColor)),
+                            ),
                           ),
-                        ),
-                        Text(log['entry_date'] ?? log['date'] ?? '', style: TextStyle(fontSize: 12, color: Colors.grey[500])),
-                      ],
-                    ),
-                  )),
-                ],
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  m['cause'] ?? loc.translate('mortalities.no_cause'),
+                                  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                                ),
+                                Text(date, style: TextStyle(fontSize: 12, color: Colors.grey[500])),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  }),
+                const SizedBox(height: 24),
 
                 // Custos recentes
-                const SizedBox(height: 24),
-                const Text('Custos Recentes', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppConstants.primaryDark)),
+                Text(
+                  loc.translate('batch_detail.recent_costs'),
+                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: AppConstants.primaryDark),
+                ),
                 const SizedBox(height: 8),
                 if (costs.isEmpty)
                   Container(
-                    padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(10)),
-                    child: const Center(child: Text('Nenhum custo registado', style: TextStyle(color: Colors.grey))),
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Center(
+                      child: Text(loc.translate('batch_detail.no_costs'), style: TextStyle(color: Colors.grey[500])),
+                    ),
                   )
                 else
-                  ...costs.take(10).map((cost) {
-                    final cat = cost['category'] as Map<String, dynamic>?;
-                    final catIcon = cat != null ? AppConstants.categoryEmoji(cat['icon'] ?? '') : '📦';
+                  ...costs.take(5).map((cost) {
+                    final category = cost['category'] as Map<String, dynamic>?;
+                    final catIcon = category != null ? AppConstants.categoryEmoji(category['icon'] ?? '') : '📦';
                     return Container(
                       margin: const EdgeInsets.only(bottom: 8),
                       padding: const EdgeInsets.all(12),
@@ -230,14 +243,17 @@ class _BatchDetailScreenState extends State<BatchDetailScreen> {
                       child: Row(
                         children: [
                           Text(catIcon, style: const TextStyle(fontSize: 22)),
-                          const SizedBox(width: 10),
+                          const SizedBox(width: 12),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(cat?['name'] ?? 'Custo', style: const TextStyle(fontWeight: FontWeight.w500)),
-                                if (cost['description'] != null && cost['description'] != '')
-                                  Text(cost['description'], style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                                Text(
+                                  category?['name'] ?? loc.translate('common.cost'),
+                                  style: const TextStyle(fontWeight: FontWeight.w500, fontSize: 14),
+                                ),
+                                if (cost['description'] != null)
+                                  Text(cost['description'], style: TextStyle(fontSize: 12, color: Colors.grey[500])),
                               ],
                             ),
                           ),
@@ -259,7 +275,7 @@ class _BatchDetailScreenState extends State<BatchDetailScreen> {
                                   borderRadius: BorderRadius.circular(4),
                                 ),
                                 child: Text(
-                                  AppConstants.statusLabel(cost['status'] ?? ''),
+                                  loc.translateStatus(cost['status'] ?? 'pending'),
                                   style: TextStyle(
                                     fontSize: 10,
                                     color: cost['status'] == 'approved'
