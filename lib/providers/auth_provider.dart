@@ -58,6 +58,8 @@ class AuthProvider extends ChangeNotifier {
     required String password,
     required String farmName,
     String? phone,
+    String? country,
+    String? currency,
   }) async {
     _isLoading = true;
     _error = null;
@@ -71,6 +73,8 @@ class AuthProvider extends ChangeNotifier {
         'farm_name': farmName,
       };
       if (phone != null && phone.isNotEmpty) body['phone'] = phone;
+      if (country != null && country.isNotEmpty) body['country'] = country;
+      if (currency != null && currency.isNotEmpty) body['currency'] = currency;
       final response = await _api.post('/auth/register', body);
       await _api.setToken(response['token'] as String);
       _user = response['user'] as Map<String, dynamic>;

@@ -30,7 +30,13 @@
     "confirm_password_error": "As senhas não coincidem",
     "password_min_length": "A senha deve ter pelo menos 6 caracteres",
     "passwords_dont_match": "As senhas não coincidem",
-    "already_have_account": "Já tem uma conta? Entrar"
+    "already_have_account": "Já tem uma conta? Entrar",
+    "country": "País",
+    "select_country": "Selecione o seu país",
+    "country_required": "Por favor selecione o seu país",
+    "currency": "Moeda",
+    "select_currency": "Selecione a moeda",
+    "currency_required": "Por favor selecione a moeda"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -414,6 +420,27 @@
     "session_expired": "Sessão expirada. Faça login novamente.",
     "unexpected_response": "O servidor retornou uma resposta inesperada.",
     "invalid_response": "Resposta inválida do servidor.",
-    "validation_error": "Erro de validação. Verifique os dados."
+    "validation_error": "Erro de validação. Verifique os dados.",
+    "batch_not_active_cost": "Não é possível adicionar custo a um lote que não está activo.",
+    "batch_not_active_mortality": "Não é possível adicionar mortalidade a um lote que não está activo.",
+    "batch_not_found": "Lote não encontrado.",
+    "invalid_credentials": "Credenciais inválidas. Verifique o email e a senha.",
+    "email_in_use": "Este email já está em uso.",
+    "user_not_found": "Utilizador não encontrado.",
+    "unauthorized": "Não autorizado. Faça login novamente.",
+    "access_denied": "Acesso negado.",
+    "field_required": "Campo obrigatório.",
+    "invalid_value": "Valor inválido.",
+    "operation_not_allowed": "Operação não permitida.",
+    "batch_already_completed": "Este lote já foi concluído.",
+    "batch_limit_reached": "Limite de lotes atingido para o seu plano.",
+    "worker_limit_reached": "Limite de colaboradores atingido para o seu plano."
+  },
+  "auth_extra": {
+    "reset_email_sent": "Email enviado!",
+    "reset_email_sent_msg": "Se o email existir no sistema, receberá um link para redefinir a sua senha. Verifique a sua caixa de entrada.",
+    "back_to_login": "Voltar ao Login",
+    "forgot_password_subtitle": "Introduza o seu email e enviaremos um link para redefinir a sua senha.",
+    "send_reset_link": "Enviar Link de Recuperação"
   }
 }

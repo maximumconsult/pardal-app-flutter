@@ -268,12 +268,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         Center(
                           child: TextButton(
                             onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(loc.translate('auth.forgot_password_msg')),
-                                  backgroundColor: const Color(0xFF2D6A4F),
-                                ),
-                              );
+                              Navigator.of(context).pushNamed('/forgot-password');
                             },
                             child: Text(
                               loc.translate('auth.forgot_password'),

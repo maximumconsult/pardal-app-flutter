@@ -30,7 +30,13 @@
     "confirm_password_error": "Passwords do not match",
     "password_min_length": "Password must be at least 6 characters",
     "passwords_dont_match": "Passwords do not match",
-    "already_have_account": "Already have an account? Login"
+    "already_have_account": "Already have an account? Login",
+    "country": "Country",
+    "select_country": "Select your country",
+    "country_required": "Please select your country",
+    "currency": "Currency",
+    "select_currency": "Select currency",
+    "currency_required": "Please select currency"
   },
   "navigation": {
     "dashboard": "Dashboard",
@@ -414,6 +420,27 @@
     "session_expired": "Session expired. Please log in again.",
     "unexpected_response": "The server returned an unexpected response.",
     "invalid_response": "Invalid server response.",
-    "validation_error": "Validation error. Please check your data."
+    "validation_error": "Validation error. Please check your data.",
+    "batch_not_active_cost": "Cannot add cost to a batch that is not active.",
+    "batch_not_active_mortality": "Cannot add mortality to a batch that is not active.",
+    "batch_not_found": "Batch not found.",
+    "invalid_credentials": "Invalid credentials. Please check your email and password.",
+    "email_in_use": "This email is already in use.",
+    "user_not_found": "User not found.",
+    "unauthorized": "Unauthorized. Please log in again.",
+    "access_denied": "Access denied.",
+    "field_required": "Required field.",
+    "invalid_value": "Invalid value.",
+    "operation_not_allowed": "Operation not allowed.",
+    "batch_already_completed": "This batch has already been completed.",
+    "batch_limit_reached": "Batch limit reached for your plan.",
+    "worker_limit_reached": "Worker limit reached for your plan."
+  },
+  "auth_extra": {
+    "reset_email_sent": "Email sent!",
+    "reset_email_sent_msg": "If the email exists in our system, you will receive a link to reset your password. Please check your inbox.",
+    "back_to_login": "Back to Login",
+    "forgot_password_subtitle": "Enter your email and we will send you a link to reset your password.",
+    "send_reset_link": "Send Reset Link"
   }
 }

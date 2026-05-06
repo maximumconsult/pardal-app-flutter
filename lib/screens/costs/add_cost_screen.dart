@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import '../../providers/data_provider.dart';
 import '../../providers/localization_provider.dart';
 import '../../utils/constants.dart';
+import '../../utils/error_helper.dart';
 
 class AddCostScreen extends StatefulWidget {
   final int batchId;
@@ -89,7 +90,7 @@ class _AddCostScreenState extends State<AddCostScreen> {
       Navigator.of(context).pop(true);
     } else if (mounted && data.error != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(data.error!), backgroundColor: AppConstants.errorColor),
+        SnackBar(content: Text(ErrorHelper.translateError(loc, data.error!)), backgroundColor: AppConstants.errorColor),
       );
     }
   }

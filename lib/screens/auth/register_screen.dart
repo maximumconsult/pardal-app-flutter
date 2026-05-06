@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../../providers/auth_provider.dart';
 import '../../providers/localization_provider.dart';
 import '../../utils/constants.dart';
+import '../../utils/error_helper.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -14,19 +15,68 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _nameCtrl = TextEditingController();
   final _emailCtrl = TextEditingController();
-  final _phoneCtrl = TextEditingController();
   final _passwordCtrl = TextEditingController();
   final _confirmPasswordCtrl = TextEditingController();
   final _farmNameCtrl = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _obscurePassword = true;
   bool _obscureConfirm = true;
+  String? _selectedCountry;
+  String? _selectedCurrency;
+
+  // Lista de países lusófonos e africanos
+  static const List<Map<String, String>> _countries = [
+    {'code': 'MZ', 'name': 'Moçambique'},
+    {'code': 'BR', 'name': 'Brasil'},
+    {'code': 'PT', 'name': 'Portugal'},
+    {'code': 'AO', 'name': 'Angola'},
+    {'code': 'CV', 'name': 'Cabo Verde'},
+    {'code': 'GW', 'name': 'Guiné-Bissau'},
+    {'code': 'ST', 'name': 'São Tomé e Príncipe'},
+    {'code': 'TL', 'name': 'Timor-Leste'},
+    {'code': 'ZA', 'name': 'África do Sul'},
+    {'code': 'GH', 'name': 'Gana'},
+    {'code': 'NG', 'name': 'Nigéria'},
+    {'code': 'KE', 'name': 'Quénia'},
+    {'code': 'TZ', 'name': 'Tanzânia'},
+    {'code': 'ZW', 'name': 'Zimbabué'},
+    {'code': 'MW', 'name': 'Malawi'},
+    {'code': 'ZM', 'name': 'Zâmbia'},
+    {'code': 'BW', 'name': 'Botsuana'},
+    {'code': 'NA', 'name': 'Namíbia'},
+    {'code': 'SZ', 'name': 'Eswatini'},
+    {'code': 'LS', 'name': 'Lesoto'},
+  ];
+
+  // Lista de moedas disponíveis
+  static const List<Map<String, String>> _currencies = [
+    {'code': 'MZN', 'name': 'Metical (MZN)'},
+    {'code': 'BRL', 'name': 'Real (BRL)'},
+    {'code': 'EUR', 'name': 'Euro (EUR)'},
+    {'code': 'USD', 'name': 'Dólar (USD)'},
+    {'code': 'AOA', 'name': 'Kwanza (AOA)'},
+    {'code': 'CVE', 'name': 'Escudo Cabo-verdiano (CVE)'},
+    {'code': 'XOF', 'name': 'Franco CFA Ocidental (XOF)'},
+    {'code': 'STN', 'name': 'Dobra (STN)'},
+    {'code': 'ZAR', 'name': 'Rand (ZAR)'},
+    {'code': 'GHS', 'name': 'Cedi (GHS)'},
+    {'code': 'NGN', 'name': 'Naira (NGN)'},
+    {'code': 'KES', 'name': 'Xelim Queniano (KES)'},
+    {'code': 'TZS', 'name': 'Xelim Tanzaniano (TZS)'},
+    {'code': 'ZWL', 'name': 'Dólar Zimbabuense (ZWL)'},
+    {'code': 'MWK', 'name': 'Kwacha Malauiano (MWK)'},
+    {'code': 'ZMW', 'name': 'Kwacha Zambiano (ZMW)'},
+    {'code': 'BWP', 'name': 'Pula (BWP)'},
+    {'code': 'NAD', 'name': 'Dólar Namibiano (NAD)'},
+    {'code': 'SZL', 'name': 'Lilangeni (SZL)'},
+    {'code': 'LSL', 'name': 'Loti (LSL)'},
+    {'code': 'GBP', 'name': 'Libra Esterlina (GBP)'},
+  ];
 
   @override
   void dispose() {
     _nameCtrl.dispose();
     _emailCtrl.dispose();
-    _phoneCtrl.dispose();
     _passwordCtrl.dispose();
     _confirmPasswordCtrl.dispose();
     _farmNameCtrl.dispose();
@@ -34,17 +84,46 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Future<void> _register() async {
+    final loc = context.read<LocalizationProvider>();
     if (!_formKey.currentState!.validate()) return;
+    
+    if (_selectedCountry == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(loc.translate('auth.country_required')),
+          backgroundColor: AppConstants.errorColor,
+        ),
+      );
+      return;
+    }
+    if (_selectedCurrency == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(loc.translate('auth.currency_required')),
+          backgroundColor: AppConstants.errorColor,
+        ),
+      );
+      return;
+    }
+
     final auth = context.read<AuthProvider>();
     final success = await auth.register(
       name: _nameCtrl.text.trim(),
       email: _emailCtrl.text.trim(),
       password: _passwordCtrl.text,
       farmName: _farmNameCtrl.text.trim(),
-      phone: _phoneCtrl.text.trim(),
+      country: _selectedCountry!,
+      currency: _selectedCurrency!,
     );
     if (success && mounted) {
       Navigator.of(context).pushReplacementNamed('/home');
+    } else if (mounted && auth.error != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(ErrorHelper.translateError(loc, auth.error!)),
+          backgroundColor: AppConstants.errorColor,
+        ),
+      );
     }
   }
 
@@ -112,6 +191,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        // Nome
                         _buildLabel(loc.translate('auth.name')),
                         const SizedBox(height: 6),
                         TextFormField(
@@ -127,6 +207,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         const SizedBox(height: 14),
 
+                        // Email
                         _buildLabel(loc.translate('auth.email')),
                         const SizedBox(height: 6),
                         TextFormField(
@@ -144,18 +225,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         const SizedBox(height: 14),
 
-                        _buildLabel(loc.translate('auth.phone')),
-                        const SizedBox(height: 6),
-                        TextFormField(
-                          controller: _phoneCtrl,
-                          keyboardType: TextInputType.phone,
-                          decoration: _inputDecoration(
-                            hint: loc.translate('auth.phone_hint'),
-                            icon: Icons.phone_outlined,
-                          ),
-                        ),
-                        const SizedBox(height: 14),
-
+                        // Nome da Quinta
                         _buildLabel(loc.translate('auth.farm_name')),
                         const SizedBox(height: 6),
                         TextFormField(
@@ -171,6 +241,90 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         const SizedBox(height: 14),
 
+                        // País
+                        _buildLabel(loc.translate('auth.country')),
+                        const SizedBox(height: 6),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: _selectedCountry,
+                              isExpanded: true,
+                              hint: Text(loc.translate('auth.select_country'), style: TextStyle(color: Colors.grey[500])),
+                              icon: const Icon(Icons.arrow_drop_down, color: AppConstants.primaryColor),
+                              items: _countries.map((country) {
+                                return DropdownMenuItem<String>(
+                                  value: country['code'],
+                                  child: Text(country['name']!),
+                                );
+                              }).toList(),
+                              onChanged: (v) {
+                                setState(() {
+                                  _selectedCountry = v;
+                                  // Auto-selecionar moeda baseada no país
+                                  if (v == 'MZ') _selectedCurrency = 'MZN';
+                                  else if (v == 'BR') _selectedCurrency = 'BRL';
+                                  else if (v == 'PT') _selectedCurrency = 'EUR';
+                                  else if (v == 'AO') _selectedCurrency = 'AOA';
+                                  else if (v == 'CV') _selectedCurrency = 'CVE';
+                                  else if (v == 'GW') _selectedCurrency = 'XOF';
+                                  else if (v == 'ST') _selectedCurrency = 'STN';
+                                  else if (v == 'ZA') _selectedCurrency = 'ZAR';
+                                  else if (v == 'GH') _selectedCurrency = 'GHS';
+                                  else if (v == 'NG') _selectedCurrency = 'NGN';
+                                  else if (v == 'KE') _selectedCurrency = 'KES';
+                                  else if (v == 'TZ') _selectedCurrency = 'TZS';
+                                  else if (v == 'ZW') _selectedCurrency = 'ZWL';
+                                  else if (v == 'MW') _selectedCurrency = 'MWK';
+                                  else if (v == 'ZM') _selectedCurrency = 'ZMW';
+                                  else if (v == 'BW') _selectedCurrency = 'BWP';
+                                  else if (v == 'NA') _selectedCurrency = 'NAD';
+                                  else if (v == 'SZ') _selectedCurrency = 'SZL';
+                                  else if (v == 'LS') _selectedCurrency = 'LSL';
+                                  else if (v == 'TL') _selectedCurrency = 'USD';
+                                });
+                              },
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+
+                        // Moeda
+                        _buildLabel(loc.translate('auth.currency')),
+                        const SizedBox(height: 6),
+                        Container(
+                          width: double.infinity,
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[50],
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(color: Colors.grey.shade300),
+                          ),
+                          child: DropdownButtonHideUnderline(
+                            child: DropdownButton<String>(
+                              value: _selectedCurrency,
+                              isExpanded: true,
+                              hint: Text(loc.translate('auth.select_currency'), style: TextStyle(color: Colors.grey[500])),
+                              icon: const Icon(Icons.arrow_drop_down, color: AppConstants.primaryColor),
+                              items: _currencies.map((currency) {
+                                return DropdownMenuItem<String>(
+                                  value: currency['code'],
+                                  child: Text(currency['name']!),
+                                );
+                              }).toList(),
+                              onChanged: (v) => setState(() => _selectedCurrency = v),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+
+                        // Senha
                         _buildLabel(loc.translate('auth.password')),
                         const SizedBox(height: 6),
                         TextFormField(
@@ -193,6 +347,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         const SizedBox(height: 14),
 
+                        // Confirmar Senha
                         _buildLabel(loc.translate('auth.confirm_password')),
                         const SizedBox(height: 6),
                         TextFormField(
@@ -215,6 +370,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         const SizedBox(height: 8),
 
+                        // Erro
                         Consumer<AuthProvider>(
                           builder: (_, auth, __) {
                             if (auth.error != null) {
@@ -232,7 +388,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       const SizedBox(width: 8),
                                       Expanded(
                                         child: Text(
-                                          auth.error!,
+                                          ErrorHelper.translateError(loc, auth.error!),
                                           style: const TextStyle(color: AppConstants.errorColor, fontSize: 13),
                                         ),
                                       ),
@@ -246,6 +402,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         const SizedBox(height: 16),
 
+                        // Botão Registar
                         Consumer<AuthProvider>(
                           builder: (_, auth, __) {
                             return SizedBox(
@@ -277,6 +434,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         ),
                         const SizedBox(height: 12),
 
+                        // Link para login
                         Center(
                           child: TextButton(
                             onPressed: () => Navigator.of(context).pop(),
