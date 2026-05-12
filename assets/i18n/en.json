@@ -497,6 +497,7 @@
     "your_plan": "Your Plan",
     "expires": "Expires on",
     "active": "Active",
-    "view_plans": "View Plans"
+    "view_plans": "View Plans",
+    "access_restricted": "Only administrators and managers can manage subscription plans."
   }
 }

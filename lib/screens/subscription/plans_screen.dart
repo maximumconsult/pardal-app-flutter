@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../../models/subscription_plan.dart';
+import '../../providers/auth_provider.dart';
 import '../../providers/subscription_provider.dart';
 import '../../providers/localization_provider.dart';
 import '../../utils/constants.dart';
@@ -29,6 +30,37 @@ class _PlansScreenState extends State<PlansScreen> {
   @override
   Widget build(BuildContext context) {
     final loc = context.watch<LocalizationProvider>();
+    final auth = context.watch<AuthProvider>();
+
+    // Apenas admin e gerente podem aceder a esta página
+    if (auth.userRole != 'admin' && auth.userRole != 'manager' && auth.userRole != 'super_admin') {
+      return Scaffold(
+        backgroundColor: AppConstants.backgroundColor,
+        appBar: AppBar(
+          backgroundColor: AppConstants.primaryColor,
+          foregroundColor: Colors.white,
+          elevation: 0,
+          title: Text(loc.translate('subscription.plans_title')),
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.lock_outline, size: 64, color: Colors.grey[400]),
+                const SizedBox(height: 16),
+                Text(
+                  loc.translate('subscription.access_restricted'),
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 16, color: Colors.grey[600]),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: AppConstants.backgroundColor,

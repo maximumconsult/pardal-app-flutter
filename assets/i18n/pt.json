@@ -497,6 +497,7 @@
     "your_plan": "O Seu Plano",
     "expires": "Expira em",
     "active": "Activo",
-    "view_plans": "Ver Planos"
+    "view_plans": "Ver Planos",
+    "access_restricted": "Apenas administradores e gerentes podem gerir planos de subscrição."
   }
 }

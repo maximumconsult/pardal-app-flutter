@@ -170,9 +170,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               const SizedBox(height: 16),
 
-              // Subscrição
-              const SubscriptionCard(),
-              const SizedBox(height: 16),
+              // Subscrição - apenas admin e gerente podem ver/gerir planos
+              if (auth.userRole == 'admin' || auth.userRole == 'manager' || auth.userRole == 'super_admin') ...[                const SubscriptionCard(),
+                const SizedBox(height: 16),
+              ],
 
               // Editar dados pessoais
               Container(
