@@ -49,7 +49,7 @@ class _BatchDetailScreenState extends State<BatchDetailScreen> {
           final species = batch['species'] as Map<String, dynamic>?;
           final icon = species != null ? AppConstants.speciesEmoji(species['icon'] ?? '') : '🐾';
           final initial = (batch['initial_quantity'] ?? 0) as num;
-          final current = (batch['current_quantity'] ?? 0) as num;
+          final current = ((batch['current_quantity'] ?? 0) as num).toInt();
           final mortality = (batch['mortality_rate'] as num?)?.toDouble() ??
               (initial > 0 ? ((initial - current) / initial * 100).toDouble() : 0.0);
           final mortalities = batch['mortality_logs'] as List<dynamic>? ?? [];
